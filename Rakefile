@@ -12,6 +12,9 @@ begin
     gem.authors = ["Simon Menke"]
     gem.add_development_dependency "thoughtbot-shoulda"
     gem.add_development_dependency "yard"
+    gem.add_runtime_dependency 'thor'
+    gem.add_runtime_dependency 'snapshots'
+    gem.files += FileList['lib/**/*.rb']
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
