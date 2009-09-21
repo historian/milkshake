@@ -1,6 +1,21 @@
-= composite
+= Composite
 
-Description goes here.
+Composite allows you to compose rails apps from several other rails apps specially packed as gems.
+
+run:
+
+  sudo gem install composite
+  cd ./path/to/rails/app
+  composite install
+
+in config/composite.yml
+
+  gems:
+    lalala_more:
+      version: 1.0.20
+    thoughtbot-paperclip:
+      lib: paperclip
+      source: http://gems.mrhenry.be
 
 == Wish list
 
