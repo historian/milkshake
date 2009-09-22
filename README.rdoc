@@ -15,14 +15,14 @@ in config/milkshake.yml
       version: 1.0.20
     thoughtbot-paperclip:
       lib: paperclip
-      source: http://gems.mrhenry.be
+      source: http://gems.github.com
 
 == Wish list
 
 * link rake tasks from [gem path]/lib/tasks
 * migrate down when removing (or downgrading) a gem.
-* load locale files when rails < 2.3.4
 * rollback to last snapshot when relink fails.
+* Make (optional) external data directory for databases and uploaded or generated files.
 
 == Note on Patches/Pull Requests
  

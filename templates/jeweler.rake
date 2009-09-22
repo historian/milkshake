@@ -40,7 +40,8 @@ begin
                      FileList['app/helpers/application_helper.rb'] +
                      FileList['public/{404,422,500}.html'] +
                      FileList['public/vendor/**/*'] +
-                     FileList['public/system/**/*']
+                     FileList['public/system/**/*'] +
+                     FileList['lib/tasks/jeweler.rb']
     
     gem.files += (included_files - ignored_files)
     
