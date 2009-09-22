@@ -34,6 +34,8 @@ Gem::Specification.new do |s|
      "lib/composite/automagic.rb",
      "lib/composite/automagic.rb",
      "lib/composite/cache.rb",
+     "lib/composite/cache.rb",
+     "lib/composite/dependency_resolver.rb",
      "lib/composite/dependency_resolver.rb",
      "lib/composite/environment.rb",
      "lib/composite/environment.rb",
@@ -53,6 +55,7 @@ Gem::Specification.new do |s|
      "lib/composite/rails_extentions/migrations.rb",
      "lib/composite/rubygems_extentions/specification.rb",
      "lib/composite/rubygems_extentions/specification.rb",
+     "lib/composite/utils/composite_methods.rb",
      "lib/composite/validator.rb",
      "lib/composite/validator.rb",
      "lib/rubygems_plugin.rb",
@@ -63,7 +66,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/simonmenke/composite}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Make composite rails applications}
   s.test_files = [
     "test/composite_test.rb",

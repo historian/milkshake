@@ -16,6 +16,8 @@ module Composite
       @cache   = cache
       @options = {'gems' => {}}.merge(options)
       
+      Composite.extender.extend_rubygems!
+      
       resolver  = nil
       @gems = @cache.key('environment.gems') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
@@ -24,8 +26,11 @@ module Composite
       
       @gemspecs = @cache.key('environment.gemspecs') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
-        resolver.specs
+        specs = resolver.specs
+        specs.each { |(name, spec)| spec.store_persistent_load_information! }
+        specs
       end
+      @gemspecs.each { |(name, spec)| spec.use_persistent_load_information! }
       
       @order = @cache.key('environment.gems.order') do
         resolver ||= DependencyResolver.load_for(@options['gems'])

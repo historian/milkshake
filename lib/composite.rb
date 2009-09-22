@@ -23,6 +23,10 @@ module Composite
     autoload :VendorBoot,    'composite/rails_extentions/boot'
   end
   
+  module Utils
+    autoload :CompositeMethod, 'composite/utils/composite_methods'
+  end
+  
   class << self
     attr_accessor :configuration_file
     attr_accessor :cache_file
@@ -54,7 +58,7 @@ module Composite
     end
     
     def extender
-      @extender ||= Extender.new(self.environment)
+      @extender ||= Extender.new
     end
     
     def cache

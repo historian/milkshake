@@ -25,6 +25,9 @@ module Composite
           end
         end
         
+        all_migrations = all_migrations.sort_by(&:version)
+        down? ? all_migrations.reverse : all_migrations
+        
         @migrations = all_migrations
       end
       
