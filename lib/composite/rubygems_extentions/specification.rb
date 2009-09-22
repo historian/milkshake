@@ -17,7 +17,7 @@ module Composite
       
       def add_rails_dependency(name, options={})
         name = name.to_s
-        add_runtime_dependency(name, *[options[:version]].compact)
+        add_runtime_dependency(name, *[options[:version] || options["version"]].compact)
         @rails_dependencies ||= {}
         @rails_dependencies[name] = options
       end

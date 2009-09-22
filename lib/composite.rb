@@ -9,6 +9,7 @@ module Composite
   autoload :DependencyResolver, 'composite/dependency_resolver'
   autoload :Environment,        'composite/environment'
   autoload :Validator,          'composite/validator'
+  autoload :Template,           'composite/template'
   autoload :Extender,           'composite/extender'
   autoload :Linker,             'composite/linker'
   autoload :Loader,             'composite/loader'

@@ -43,7 +43,9 @@ module Composite
     end
     
     def gemspecs
-      gemspecs_by_name.values
+      @ordered_gemspecs ||= @order.collect do |name|
+        gemspecs_by_name[name]
+      end
     end
     
     def gem_dependencies

@@ -55,11 +55,16 @@ Gem::Specification.new do |s|
      "lib/composite/rails_extentions/migrations.rb",
      "lib/composite/rubygems_extentions/specification.rb",
      "lib/composite/rubygems_extentions/specification.rb",
+     "lib/composite/template.rb",
+     "lib/composite/utils/composite_methods.rb",
      "lib/composite/utils/composite_methods.rb",
      "lib/composite/validator.rb",
      "lib/composite/validator.rb",
      "lib/rubygems_plugin.rb",
      "lib/rubygems_plugin.rb",
+     "templates/composite.yml",
+     "templates/jeweler.rake",
+     "templates/preinitializer.rb",
      "test/composite_test.rb",
      "test/test_helper.rb"
   ]
