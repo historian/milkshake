@@ -4,11 +4,11 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "composite"
+    gem.name = "milkshake"
     gem.summary = %Q{Make composite rails applications}
-    gem.description = %Q{Compose rails applications using several smaller rails applicatons}
+    gem.description = %Q{Compose rails applications using several smaller rails applications}
     gem.email = "simon@mrhenry.be"
-    gem.homepage = "http://github.com/simonmenke/composite"
+    gem.homepage = "http://github.com/simonmenke/milkshake"
     gem.authors = ["Simon Menke"]
     gem.add_development_dependency "thoughtbot-shoulda"
     gem.add_development_dependency "yard"

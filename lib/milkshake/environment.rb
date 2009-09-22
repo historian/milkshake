@@ -1,5 +1,5 @@
 
-module Composite
+module Milkshake
   class Environment
     
     attr_reader :gems, :options, :cache
@@ -16,7 +16,7 @@ module Composite
       @cache   = cache
       @options = {'gems' => {}}.merge(options)
       
-      Composite.extender.extend_rubygems!
+      Milkshake.extender.extend_rubygems!
       
       resolver  = nil
       @gems = @cache.key('environment.gems') do

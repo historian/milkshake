@@ -1,5 +1,5 @@
 
-module Composite
+module Milkshake
   class Loader
     
     attr_accessor :environment, :cache

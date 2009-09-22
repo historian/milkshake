@@ -1,7 +1,7 @@
 
 require 'tsort'
 
-module Composite
+module Milkshake
   class DependencyResolver
     
     attr_reader :names, :specs, :gems
@@ -48,7 +48,7 @@ module Composite
   private
     
     def find_gemspec(name, options={})
-      requirement = options[:version] || Gem::Requirement.default
+      requirement = options[:version] || options["version"] || Gem::Requirement.default
       dep   = Gem::Dependency.new(name, requirement)
       specs = gemspec_index.search(dep)
       
@@ -71,19 +71,6 @@ module Composite
     
     def add_dependecies_for(spec)
       deps = (spec.rails_dependencies || {})
-      deps.each do |name, options|
-        next if @names.include?(name)
-        
-        gemspec = find_gemspec(name, options)
-        @specs[gemspec.name] = gemspec
-        @names.push(gemspec.name)
-        add_dependecies_for(gemspec)
-      end
-      
-      @gems = @gems.merge(deps)
-      
-      
-      deps = (spec.instance_variable_get('@engine_dependencies') || {})
       deps.each do |name, options|
         next if @names.include?(name)
         

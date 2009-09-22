@@ -1,14 +1,14 @@
-= Composite
+= Milkshake
 
-Composite allows you to compose rails apps from several other rails apps specially packed as gems.
+Milkshake allows you to compose rails apps from several other rails apps specially packed as gems.
 
 run:
 
-  sudo gem install composite
+  sudo gem install milkshake
   cd ./path/to/rails/app
-  composite install
+  milkshake install
 
-in config/composite.yml
+in config/milkshake.yml
 
   gems:
     lalala_more:

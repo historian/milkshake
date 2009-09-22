@@ -1,7 +1,7 @@
 
 require 'digest/sha1'
 
-module Composite
+module Milkshake
   class Validator
     
     attr_reader :cache, :link_time

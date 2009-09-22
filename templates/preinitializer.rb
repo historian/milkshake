@@ -1,4 +1,4 @@
 
-# this is the composite initializer
+# this is the milkshake initializer
 require 'rubygems'
-require 'composite/automagic'
+require 'milkshake/automagic'

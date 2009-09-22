@@ -10,7 +10,7 @@ begin
     gem.authors = ["{{author}}"]
     
     # development dependencies
-    gem.add_development_dependency "composite"
+    gem.add_development_dependency "milkshake"
     gem.add_development_dependency "thoughtbot-shoulda"
     
     # rdoc
@@ -31,7 +31,7 @@ begin
                      FileList['app/views/**/*'] +
                      FileList['rails/**/*.rb'] +
                      FileList['config/locales/*.{rb,yml}'] +
-                     FileList['config/composite.yml'] +
+                     FileList['config/milkshake.yml'] +
                      FileList['config/routes.rb'] +
                      FileList['db/migrate/*.{rb}'] +
                      FileList['public/**/*']
@@ -45,9 +45,9 @@ begin
     gem.files += (included_files - ignored_files)
     
     # runtime dependencies
-    composite_config = YAML.load_file('config/composite.yml')
-    composite_config['gems'].each do |name, options|
-      gem.add_rails_dependency name, options
+    milkshake_config = YAML.load_file('config/milkshake.yml')
+    milkshake_config['gems'].each do |name, options|
+      gem.add_runtime_dependency(name, (options['version'] || Gem::Requirement.default))
     end
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

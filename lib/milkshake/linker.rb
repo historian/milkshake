@@ -1,7 +1,7 @@
 
 require 'snapshots'
 
-module Composite
+module Milkshake
   class Linker
     
     attr_reader :environment, :validator, :cache
@@ -50,7 +50,7 @@ module Composite
     end
     
     def link_only_once
-      lock_path  = Composite.cache_file
+      lock_path  = Milkshake.cache_file
       FileUtils.touch(lock_path)
       lock_file  = File.new(lock_path)
       acquired   = !!lock_file.flock(File::LOCK_EX | File::LOCK_NB)

@@ -1,5 +1,5 @@
 
-module Composite
+module Milkshake
   class Cache
     
     attr_accessor :path, :entries

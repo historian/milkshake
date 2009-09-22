@@ -1,5 +1,5 @@
 
-module Composite
+module Milkshake
   class Template
     
     class << self
