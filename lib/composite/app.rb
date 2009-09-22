@@ -25,6 +25,16 @@ EOC
           end
         end
         
+        unless File.file?('config/composite.yml')
+          File.open('config/composite.yml', 'w+') do |f|
+            f.write <<-EOC
+gems:
+  lalala_more:
+    version: 0.2.38
+EOC
+          end
+        end
+        
       end
     end
     

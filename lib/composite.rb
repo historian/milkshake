@@ -6,12 +6,14 @@ require 'rubygems'
 
 module Composite
   
-  autoload :Environment, 'composite/environment'
-  autoload :Validator,   'composite/validator'
-  autoload :Extender,    'composite/extender'
-  autoload :Linker,      'composite/linker'
-  autoload :Loader,      'composite/loader'
-  autoload :App,         'composite/app'
+  autoload :DependencyResolver, 'composite/dependency_resolver'
+  autoload :Environment,        'composite/environment'
+  autoload :Validator,          'composite/validator'
+  autoload :Extender,           'composite/extender'
+  autoload :Linker,             'composite/linker'
+  autoload :Loader,             'composite/loader'
+  autoload :Cache,              'composite/cache'
+  autoload :App,                'composite/app'
   
   module RailsExtentions
     autoload :Configuration, 'composite/rails_extentions/configuration'
@@ -23,28 +25,45 @@ module Composite
   
   class << self
     attr_accessor :configuration_file
-    attr_accessor :validation_file
+    attr_accessor :cache_file
+    
+    def load!
+      cache
+      validator
+      environment
+      loader
+      linker
+      extender
+    end
     
     def environment
       self.configuration_file ||= File.join(RAILS_ROOT, 'config', 'composite.yml')
-      @environment ||= Environment.load(self.configuration_file)
+      @environment ||= Environment.load(self.cache, self.configuration_file)
     end
     
     def validator
-      self.validation_file ||= File.join(RAILS_ROOT, 'tmp', 'composite_version.yml')
-      @validator ||= Validator.new(self.environment, self.validation_file)
+      @validator ||= Validator.new(self.cache)
     end
     
     def loader
-      @loader ||= Loader.new(self.environment)
+      @loader ||= Loader.new(self.environment, self.cache)
     end
     
     def linker
-      @linker ||= Linker.new(self.environment, self.validator)
+      @linker ||= Linker.new(self.environment, self.validator, self.cache)
     end
     
     def extender
       @extender ||= Extender.new(self.environment)
+    end
+    
+    def cache
+      self.cache_file ||= File.join(RAILS_ROOT, 'tmp', 'composite.cache')
+      @cache ||= Cache.new(self.cache_file)
+    end
+    
+    def persist!
+      cache.persist!
     end
   end
   

@@ -2,17 +2,27 @@
 module Composite
   class Loader
     
-    attr_accessor :environment
+    attr_accessor :environment, :cache
     
-    def initialize(environment)
+    def initialize(environment, cache)
       @environment = environment
+      @cache       = cache
     end
     
     def load_gem_initializers!
-      self.environment.gemspecs.each do |gemspec|
-        initializers_path = File.join(gemspec.full_gem_path, 'rails', 'initializers', '**', '*.rb')
-        Dir.glob(initializers_path).each do |initializer|
-          load(initializer)
+      initializers.each do |initializer|
+        load(initializer)
+      end
+    end
+    
+  private
+    
+    def initializers
+      @cache.key('loader.initializers') do
+        relative_path = ['rails', 'initializers', '**', '*.rb']
+        self.environment.gemspecs.inject([]) do |paths, gemspec|
+          paths.concat Dir.glob(File.join(gemspec.full_gem_path, *relative_path))
+          paths
         end
       end
     end

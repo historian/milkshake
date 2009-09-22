@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Menke"]
-  s.date = %q{2009-09-21}
+  s.date = %q{2009-09-22}
   s.default_executable = %q{composite}
   s.description = %q{Compose rails applications using several smaller rails applicatons}
   s.email = %q{simon@mrhenry.be}
@@ -25,26 +25,45 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/composite",
+     "composite.gemspec",
      "lib/composite.rb",
      "lib/composite.rb",
      "lib/composite/app.rb",
+     "lib/composite/app.rb",
      "lib/composite/automagic.rb",
+     "lib/composite/automagic.rb",
+     "lib/composite/cache.rb",
+     "lib/composite/dependency_resolver.rb",
+     "lib/composite/environment.rb",
      "lib/composite/environment.rb",
      "lib/composite/extender.rb",
+     "lib/composite/extender.rb",
+     "lib/composite/linker.rb",
      "lib/composite/linker.rb",
      "lib/composite/loader.rb",
+     "lib/composite/loader.rb",
+     "lib/composite/rails_extentions/boot.rb",
      "lib/composite/rails_extentions/boot.rb",
      "lib/composite/rails_extentions/configuration.rb",
+     "lib/composite/rails_extentions/configuration.rb",
+     "lib/composite/rails_extentions/initializer.rb",
      "lib/composite/rails_extentions/initializer.rb",
      "lib/composite/rails_extentions/migrations.rb",
+     "lib/composite/rails_extentions/migrations.rb",
+     "lib/composite/rubygems_extentions/specification.rb",
+     "lib/composite/rubygems_extentions/specification.rb",
      "lib/composite/validator.rb",
+     "lib/composite/validator.rb",
+     "lib/rubygems_plugin.rb",
+     "lib/rubygems_plugin.rb",
      "test/composite_test.rb",
      "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/simonmenke/composite}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.4}
   s.summary = %q{Make composite rails applications}
   s.test_files = [
     "test/composite_test.rb",

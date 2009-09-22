@@ -12,6 +12,7 @@ module Composite
       
       def load_initializer_with_composite
         load_initializer_without_composite
+        Composite.load!
         Composite.extender.extend_railties!
       end
     end
@@ -26,6 +27,7 @@ module Composite
       
       def load_initializer_with_composite
         load_initializer_without_composite
+        Composite.load!
         Composite.extender.extend_railties!
       end
     end

@@ -2,29 +2,35 @@
 module Composite
   class Environment
     
-    attr_reader :gems, :options
+    attr_reader :gems, :options, :cache
     
-    def self.load(path)
+    def self.load(cache, path)
       if File.exist?(path)
-        new YAML.load_file(path)
+        new cache, YAML.load_file(path)
       else
-        new
+        new cache
       end
     end
     
-    def initialize(options={})
+    def initialize(cache, options={})
+      @cache   = cache
       @options = {'gems' => {}}.merge(options)
-      @gems = {}
-      add_configured_gems
-      add_dependencies
-    end
-    
-    def gem(name, options={})
-      options = options.inject({}) do |m, (k, v)|
-        m[k.to_sym] = v
-        m
+      
+      resolver  = nil
+      @gems = @cache.key('environment.gems') do
+        resolver ||= DependencyResolver.load_for(@options['gems'])
+        resolver.gems
       end
-      @gems[name.to_s] = options
+      
+      @gemspecs = @cache.key('environment.gemspecs') do
+        resolver ||= DependencyResolver.load_for(@options['gems'])
+        resolver.specs
+      end
+      
+      @order = @cache.key('environment.gems.order') do
+        resolver ||= DependencyResolver.load_for(@options['gems'])
+        resolver.names
+      end
     end
     
     def gemspecs_by_name
@@ -36,58 +42,27 @@ module Composite
     end
     
     def gem_dependencies
-      @gems.inject([]) do |g, (name, options)|
-        g << Rails::GemDependency.new(name, options)
+      @order.inject([]) do |g, name|
+        g << Rails::GemDependency.new(name, @gems[name])
       end
     end
     
-  private
-    
-    def add_configured_gems
-      @options['gems'].each do |name, options|
-        self.gem(name, options)
-      end
-    end
-    
-    def add_dependencies
-      lookedup     = []
-      needs_lookup = @gems.keys
-      needs_lookup.each do |name|
-        next if lookedup.include?(name.to_s)
-        options = @gems[name]
-        
-        spec = find_gemspec(name, options)
-        lookedup.push(name.to_s)
-        (spec.engine_dependencies || []).each do |name, options|
-          unless @gems.key?(name.to_s)
-            self.gem(name, options)
-            needs_lookup.push(name.to_s)
+    def locale_paths
+      @cache.key('environment.locale_paths') do
+        if Gem::Version.new(Rails.version) < Gem::Version.new("2.3.4")
+          locale_paths = self.gemspecs.inject([]) do |paths, gemspec|
+            locale_path = File.join(gemspec.full_gem_path, 'config', 'locales')
+            if File.directory?(locale_path)
+              paths.push(Dir[File.join(locale_path, '*.{rb,yml}')])
+            else
+              paths
+            end
           end
+          locale_paths.flatten!
+        else
+          []
         end
       end
-    end
-    
-    def find_gemspec(name, options={})
-      return self.gemspecs_by_name[name.to_s] if self.gemspecs_by_name[name.to_s]
-      
-      requirement = options[:version] || Gem::Requirement.default
-      dep   = Gem::Dependency.new(name, requirement)
-      specs = gemspec_index.search(dep)
-      
-      return nil if specs.empty?
-      
-      specs.sort! do |a,b|
-        b.version <=> a.version
-      end
-      
-      gemspec = specs.first
-      self.gemspecs_by_name[name.to_s] = gemspec
-      
-      gemspec
-    end
-    
-    def gemspec_index
-      @gemspec_index ||= Gem::SourceIndex.from_installed_gems
     end
     
   end

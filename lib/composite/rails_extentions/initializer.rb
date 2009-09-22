@@ -22,6 +22,7 @@ module Composite
         Composite.linker.link!
         if gems_dependencies_loaded
           Composite.loader.load_gem_initializers!
+          Composite.persist!
         end
         load_application_initializers_without_composite
       end
