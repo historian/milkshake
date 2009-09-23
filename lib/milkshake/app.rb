@@ -1,5 +1,10 @@
 
-require 'thor'
+begin
+  require 'thor'
+rescue LoadError
+  require 'rubygems'
+  retry
+end
 
 module Milkshake
   class App < Thor

@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'rubygems'
   require 'milkshake'
 rescue LoadError
-  require File.join(File.dirname(__FILE__), *%w[ .. lib milkshake ])
+  $:.unshift File.join(File.dirname(__FILE__), *%w[ .. lib ])
+  retry
 end
 
 Milkshake::App.start

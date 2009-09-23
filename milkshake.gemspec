@@ -56,8 +56,6 @@ Gem::Specification.new do |s|
      "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/template.rb",
      "lib/milkshake/template.rb",
-     "lib/milkshake/utils/milkshake_methods.rb",
-     "lib/milkshake/utils/milkshake_methods.rb",
      "lib/milkshake/validator.rb",
      "lib/milkshake/validator.rb",
      "milkshake.gemspec",

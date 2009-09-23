@@ -1,8 +1,5 @@
 
-$:.push(File.expand_path(File.dirname(__FILE__))) unless $:.include?(File.expand_path(File.dirname(__FILE__)))
-
 require 'fileutils'
-require 'rubygems'
 
 module Milkshake
   
@@ -26,10 +23,6 @@ module Milkshake
   
   module RubygemsExtentions
     autoload :Specification, 'milkshake/rubygems_extentions/specification'
-  end
-  
-  module Utils
-    autoload :MilkshakeMethod, 'milkshake/utils/milkshake_methods'
   end
   
   class << self
