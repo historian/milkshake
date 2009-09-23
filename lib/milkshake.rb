@@ -24,6 +24,10 @@ module Milkshake
     autoload :VendorBoot,    'milkshake/rails_extentions/boot'
   end
   
+  module RubygemsExtentions
+    autoload :Specification, 'milkshake/rubygems_extentions/specification'
+  end
+  
   module Utils
     autoload :MilkshakeMethod, 'milkshake/utils/milkshake_methods'
   end

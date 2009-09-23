@@ -39,12 +39,9 @@ module Milkshake
       FileUtils.mkdir_p(public_vendor_path)
       
       self.environment.gemspecs.each do |gemspec|
-        begin
-          public_path = File.join(gemspec.full_gem_path, 'public')
-          if File.directory?(public_path)
-            FileUtils.ln_s(public_path, File.join(public_vendor_path, gemspec.name))
-          end
-        rescue
+        public_path = File.join(gemspec.full_gem_path, 'public')
+        if File.directory?(public_path)
+          FileUtils.ln_s(public_path, File.join(public_vendor_path, gemspec.name))
         end
       end
     end

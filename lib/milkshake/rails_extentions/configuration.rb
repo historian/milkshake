@@ -3,9 +3,12 @@ module Milkshake
   module RailsExtentions
     module Configuration
       
-      extend Milkshake::Utils::MilkshakeMethod
-      milkshake_method :default_gems
-      milkshake_method :default_i18n
+      def self.included(base)
+        %w( default_gems default_i18n ).each do |m|
+          base.send :alias_method, "#{m}_without_milkshake", m
+          base.send :alias_method, m, "#{m}_with_milkshake"
+        end
+      end
       
       # inject gem dependecies
       def default_gems_with_milkshake

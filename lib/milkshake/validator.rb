@@ -20,7 +20,7 @@ module Milkshake
       if File.file?(path)
         @current_link_time = File.mtime(path)
       else
-        @current_link_time = false
+        @current_link_time = Time.now
       end
       
       @current_link_time

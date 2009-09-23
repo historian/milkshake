@@ -51,9 +51,7 @@ module Milkshake
   private
     
     def include_module(base, mod)
-      unless base.included_modules.include?(mod)
-        base.send :include, mod
-      end
+      base.send :include, mod
     end
     
   end

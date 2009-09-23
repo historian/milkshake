@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Menke"]
-  s.date = %q{2009-09-22}
+  s.date = %q{2009-09-23}
   s.default_executable = %q{milkshake}
-  s.description = %q{Compose rails applications using several smaller rails applicatons}
+  s.description = %q{Compose rails applications using several smaller rails applications}
   s.email = %q{simon@mrhenry.be}
   s.executables = ["milkshake"]
   s.extra_rdoc_files = [
@@ -26,47 +26,48 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "bin/milkshake",
+     "lib/milkshake.rb",
+     "lib/milkshake.rb",
+     "lib/milkshake/app.rb",
+     "lib/milkshake/app.rb",
+     "lib/milkshake/automagic.rb",
+     "lib/milkshake/automagic.rb",
+     "lib/milkshake/cache.rb",
+     "lib/milkshake/cache.rb",
+     "lib/milkshake/dependency_resolver.rb",
+     "lib/milkshake/dependency_resolver.rb",
+     "lib/milkshake/environment.rb",
+     "lib/milkshake/environment.rb",
+     "lib/milkshake/extender.rb",
+     "lib/milkshake/extender.rb",
+     "lib/milkshake/linker.rb",
+     "lib/milkshake/linker.rb",
+     "lib/milkshake/loader.rb",
+     "lib/milkshake/loader.rb",
+     "lib/milkshake/rails_extentions/boot.rb",
+     "lib/milkshake/rails_extentions/boot.rb",
+     "lib/milkshake/rails_extentions/configuration.rb",
+     "lib/milkshake/rails_extentions/configuration.rb",
+     "lib/milkshake/rails_extentions/initializer.rb",
+     "lib/milkshake/rails_extentions/initializer.rb",
+     "lib/milkshake/rails_extentions/migrations.rb",
+     "lib/milkshake/rails_extentions/migrations.rb",
+     "lib/milkshake/rubygems_extentions/specification.rb",
+     "lib/milkshake/rubygems_extentions/specification.rb",
+     "lib/milkshake/template.rb",
+     "lib/milkshake/template.rb",
+     "lib/milkshake/utils/milkshake_methods.rb",
+     "lib/milkshake/utils/milkshake_methods.rb",
+     "lib/milkshake/validator.rb",
+     "lib/milkshake/validator.rb",
      "milkshake.gemspec",
-     "lib/milkshake.rb",
-     "lib/milkshake.rb",
-     "lib/milkshake/app.rb",
-     "lib/milkshake/app.rb",
-     "lib/milkshake/automagic.rb",
-     "lib/milkshake/automagic.rb",
-     "lib/milkshake/cache.rb",
-     "lib/milkshake/cache.rb",
-     "lib/milkshake/dependency_resolver.rb",
-     "lib/milkshake/dependency_resolver.rb",
-     "lib/milkshake/environment.rb",
-     "lib/milkshake/environment.rb",
-     "lib/milkshake/extender.rb",
-     "lib/milkshake/extender.rb",
-     "lib/milkshake/linker.rb",
-     "lib/milkshake/linker.rb",
-     "lib/milkshake/loader.rb",
-     "lib/milkshake/loader.rb",
-     "lib/milkshake/rails_extentions/boot.rb",
-     "lib/milkshake/rails_extentions/boot.rb",
-     "lib/milkshake/rails_extentions/configuration.rb",
-     "lib/milkshake/rails_extentions/configuration.rb",
-     "lib/milkshake/rails_extentions/initializer.rb",
-     "lib/milkshake/rails_extentions/initializer.rb",
-     "lib/milkshake/rails_extentions/migrations.rb",
-     "lib/milkshake/rails_extentions/migrations.rb",
-     "lib/milkshake/rubygems_extentions/specification.rb",
-     "lib/milkshake/rubygems_extentions/specification.rb",
-     "lib/milkshake/template.rb",
-     "lib/milkshake/template.rb",
-     "lib/milkshake/utils/milkshake_methods.rb",
-     "lib/milkshake/utils/milkshake_methods.rb",
-     "lib/milkshake/validator.rb",
-     "lib/milkshake/validator.rb",
-     "templates/milkshake.yml",
-     "templates/milkshake.yml",
      "templates/jeweler.rake",
      "templates/jeweler.rake",
+     "templates/milkshake.yml",
+     "templates/milkshake.yml",
      "templates/preinitializer.rb",
      "templates/preinitializer.rb",
+     "templates/routes.rb",
      "templates/routes.rb",
      "test/milkshake_test.rb",
      "test/test_helper.rb"
@@ -75,7 +76,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.4}
-  s.summary = %q{Make milkshake rails applications}
+  s.summary = %q{Make composite rails applications}
   s.test_files = [
     "test/milkshake_test.rb",
      "test/test_helper.rb"
