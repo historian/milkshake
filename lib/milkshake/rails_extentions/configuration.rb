@@ -4,7 +4,7 @@ module Milkshake
     module Configuration
       
       def self.included(base)
-        %w( default_gems default_i18n ).each do |m|
+        %w( default_gems default_i18n default_load_paths ).each do |m|
           base.send :alias_method, "#{m}_without_milkshake", m
           base.send :alias_method, m, "#{m}_with_milkshake"
         end
@@ -23,6 +23,12 @@ module Milkshake
         default_i18n.load_path.concat(Milkshake.environment.locale_paths)
         default_i18n.load_path.uniq!
         default_i18n
+      end
+      
+      # inject fallback application controller
+      def default_load_paths_with_milkshake
+        path = File.expand_path(File.join(File.dirname(__FILE__), *%w( .. rails_fallbacks )))
+        default_load_paths_without_milkshake.push(path)
       end
       
     end

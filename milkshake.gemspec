@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
      "lib/milkshake/rails_extentions/initializer.rb",
      "lib/milkshake/rails_extentions/migrations.rb",
      "lib/milkshake/rails_extentions/migrations.rb",
+     "lib/milkshake/rails_fallbacks/application_controller.rb",
      "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/template.rb",

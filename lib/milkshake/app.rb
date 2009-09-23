@@ -190,6 +190,26 @@ module Milkshake
       shell.say('Jeweler successfully installed!', Thor::Shell::Color::GREEN)
     end
     
+    desc 'hostify', 'make a milkshake host app'
+    def hostify
+      goto_rails do
+        FileUtils.rm_rf('README')             rescue nil
+        FileUtils.rm_rf('Rakefile')           rescue nil
+        FileUtils.rm_rf('app')                rescue nil
+        FileUtils.rm_rf('config/locales')     rescue nil
+        FileUtils.rm_rf('db/seeds.rb')        rescue nil
+        FileUtils.rm_rf('doc')                rescue nil
+        FileUtils.rm_rf('lib')                rescue nil
+        FileUtils.rm_rf('public/images')      rescue nil
+        FileUtils.rm_rf('public/javascripts') rescue nil
+        FileUtils.rm_rf('public/stylesheets') rescue nil
+        FileUtils.rm_rf('test')               rescue nil
+        FileUtils.rm_rf('vendor')             rescue nil
+      end
+      
+      shell.say('Rails app successfully stripped!', Thor::Shell::Color::GREEN)
+    end
+    
   private
     
     def load_environment!
