@@ -150,8 +150,7 @@ module Milkshake
         root_path = File.expand_path(root_path)
         
         unless File.directory?(root_path) and File.file?(File.join(root_path, 'config', 'environment.rb'))
-          shell.say("This is not a rails application!\n#{root_path}", Thor::Shell::Color::RED)
-          exit(1)
+          bad_say("This is not a rails application!\n#{root_path}")
         end
         
         @rails_root = root_path
@@ -165,6 +164,15 @@ module Milkshake
         self.options.environment
       end
       
+      def good_say(msg)
+        shell.say(msg, Thor::Shell::Color::GREEN)
+      end
+      
+      def bad_say(msg, exit=true)
+        shell.say(msg, Thor::Shell::Color::RED)
+        exit(1) if exit
+      end
+      
     end
     
     module Actions
@@ -172,15 +180,13 @@ module Milkshake
       
       def assert_valid_gem_name!(name)
         unless name =~ /^[a-zA-Z0-9_-]+$/
-          puts "please specify a valid gem name (/^[a-zA-Z0-9_-]+$/)"
-          exit(1)
+          bad_say "please specify a valid gem name (/^[a-zA-Z0-9_-]+$/)"
         end
       end
       
       def assert_new_app_path!
         if File.exist?(self.options.app)
-          shell.say("This path already exists!\n#{self.options.app}", Thor::Shell::Color::RED)
-          exit(1)
+          bad_say("This path already exists!\n#{self.options.app}")
         end
       end
       
@@ -195,7 +201,7 @@ module Milkshake
         assert_new_app_path!
         
         system(%{rails "#{self.options.app}" > /dev/null})
-        shell.say('Rails app successfully created!', Thor::Shell::Color::GREEN)
+        good_say('Rails app successfully created!')
         
         goto_rails do
           if File.file?('config/locales/en.yml')
@@ -224,7 +230,7 @@ module Milkshake
           ).write_to('config/routes.rb')
         end
         
-        shell.say('Rails app successfully cleaned!', Thor::Shell::Color::GREEN)
+        good_say('Rails app successfully cleaned!')
       end
       
       def install_app!
@@ -240,7 +246,7 @@ module Milkshake
           
         end
         
-        shell.say('Milkshake successfully installed!', Thor::Shell::Color::GREEN)
+        good_say('Milkshake successfully installed!')
       end
       
       def install_gem!(name)
@@ -260,7 +266,7 @@ module Milkshake
           FileUtils.touch('rails/init.rb')
         end
         
-        shell.say('Jeweler successfully installed!', Thor::Shell::Color::GREEN)
+        good_say('Jeweler successfully installed!')
       end
       
       def install_host!
@@ -279,7 +285,7 @@ module Milkshake
           FileUtils.rm_rf('vendor')             rescue nil
         end
         
-        shell.say('Rails app successfully stripped!', Thor::Shell::Color::GREEN)
+        good_say('Rails app successfully stripped!')
       end
       
     end
