@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Menke"]
-  s.date = %q{2009-09-23}
+  s.date = %q{2009-09-24}
   s.default_executable = %q{milkshake}
   s.description = %q{Compose rails applications using several smaller rails applications}
   s.email = %q{simon@mrhenry.be}
@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
      "lib/milkshake/rails_extentions/initializer.rb",
      "lib/milkshake/rails_extentions/migrations.rb",
      "lib/milkshake/rails_extentions/migrations.rb",
+     "lib/milkshake/rails_fallbacks/application_controller.rb",
      "lib/milkshake/rails_fallbacks/application_controller.rb",
      "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/rubygems_extentions/specification.rb",

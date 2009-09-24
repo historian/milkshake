@@ -41,23 +41,6 @@ module Milkshake
       :banner => 'env', :type => :string,
       :group  => 'Global'
     
-    desc 'install', 'install the milkshake preinitializer'
-    def install
-      goto_rails do
-        
-        Milkshake::Template.evaluate('preinitializer.rb'
-        ).write_to('config/preinitializer.rb')
-        
-        unless File.file?('config/milkshake.yml')
-          Milkshake::Template.evaluate('milkshake.yml'
-          ).write_to('config/milkshake.yml')
-        end
-        
-        shell.say('Milkshake successfully installed!', Thor::Shell::Color::GREEN)
-        
-      end
-    end
-    
     desc 'info', 'list all loaded gems'
     def info
       goto_rails do
@@ -70,11 +53,13 @@ module Milkshake
       end
     end
     
-    desc 'create PATH', 'create a new rails app.'
-    method_option :gemify, :default => false,
-      :desc   => 'Also make this a gem',
-      :type => :boolean,
-      :group  => 'Command'
+    desc 'create-app PATH', 'create a new rails app.'
+    def create_app(path)
+      install_rails! path
+      install_app!
+    end
+    
+    desc 'create-gem PATH', 'create a new milkshake gem.'
     method_option :summary, :default => '[SUMMARY]',
       :desc   => 'The gem summary',
       :banner => 'string', :type => :string,
@@ -95,58 +80,27 @@ module Milkshake
       :desc   => 'The gem author\'s email address',
       :banner => 'string', :type => :string,
       :group  => 'Gem'
-    def create(path)
-      
-      # owerride app option
-      path = File.expand_path(path)
-      @options = @options.dup
-      @options['app'] = path
-      
-      if File.exist?(self.options.app)
-        shell.say("This path already exists!\n#{self.options.app}", Thor::Shell::Color::RED)
-        exit(1)
-      end
-      
-      system(%{rails "#{self.options.app}" > /dev/null})
-      shell.say('Rails app successfully created!', Thor::Shell::Color::GREEN)
-      
-      goto_rails do
-        if File.file?('config/locales/en.yml')
-          File.unlink('config/locales/en.yml')
-        end
-        if File.file?('public/index.html')
-          File.unlink('public/index.html')
-        end
-        if File.file?('public/images/rails.png')
-          File.unlink('public/images/rails.png')
-        end
-        if File.file?('public/javascripts/controls.js')
-          File.unlink('public/javascripts/controls.js')
-        end
-        if File.file?('public/javascripts/dragdrop.js')
-          File.unlink('public/javascripts/dragdrop.js')
-        end
-        if File.file?('public/javascripts/effects.js')
-          File.unlink('public/javascripts/effects.js')
-        end
-        if File.file?('public/javascripts/prototype.js')
-          File.unlink('public/javascripts/prototype.js')
-        end
-        
-        Milkshake::Template.evaluate('routes.rb'
-        ).write_to('config/routes.rb')
-      end
-      
-      shell.say('Rails app successfully cleaned!', Thor::Shell::Color::GREEN)
-      
-      install
-      
-      if self.options.gemify
-        gemify(File.basename(path))
-      end
+    def create_gem(path)
+      name = File.basename(path)
+      assert_valid_gem_name! name
+      install_rails! path
+      install_app!
+      install_gem! name
     end
     
-    desc 'gemify NAME', 'make a milkshake plugin'
+    desc 'create-host PATH', 'create a new milkshake host app.'
+    def create_host(path)
+      install_rails! path
+      install_app!
+      install_host!
+    end
+    
+    desc 'install-app', 'install the milkshake preinitializer'
+    def install_app
+      install_app!
+    end
+    
+    desc 'install-gem NAME', 'make a milkshake plugin'
     method_option :summary, :default => '[SUMMARY]',
       :desc   => 'The gem summary',
       :banner => 'string', :type => :string,
@@ -167,79 +121,171 @@ module Milkshake
       :desc   => 'The gem author\'s email address',
       :banner => 'string', :type => :string,
       :group  => 'Command'
-    def gemify(name)
-      unless name =~ /^[a-zA-Z0-9_-]+$/
-        puts "please specify a valid gem name (/^[a-zA-Z0-9_-]+$/)"
-        exit(1)
+    def install_gem(name)
+      assert_valid_gem_name! name
+      install_app!
+      install_gem! name
+    end
+    
+    desc 'install-host', 'make a milkshake host app'
+    def install_host
+      install_app!
+      install_host!
+    end
+    
+    module Helpers
+    private
+      
+      def load_environment!
+        Object.const_set('RAILS_ROOT', rails_root)  rescue nil
+        ENV['RAILS_ENV'] = environment
+        $rails_rake_task = true
+        require(File.join(RAILS_ROOT, 'config', 'environment'))
       end
       
-      goto_rails do
-        Milkshake::Template.evaluate('jeweler.rake',
-          :name        => name,
-          :author      => self.options.author,
-          :email       => self.options.email,
-          :summary     => self.options.summary,
-          :description => self.options.description,
-          :website     => self.options.website
-        ).write_to('lib/tasks/jeweler.rake')
+      def rails_root
+        return @rails_root if @rails_root
         
-        FileUtils.mkdir_p('rails/initializers')
-        FileUtils.touch('rails/init.rb')
+        root_path = self.options.app
+        root_path = File.expand_path(root_path)
+        
+        unless File.directory?(root_path) and File.file?(File.join(root_path, 'config', 'environment.rb'))
+          shell.say("This is not a rails application!\n#{root_path}", Thor::Shell::Color::RED)
+          exit(1)
+        end
+        
+        @rails_root = root_path
       end
       
-      shell.say('Jeweler successfully installed!', Thor::Shell::Color::GREEN)
-    end
-    
-    desc 'hostify', 'make a milkshake host app'
-    def hostify
-      goto_rails do
-        FileUtils.rm_rf('README')             rescue nil
-        FileUtils.rm_rf('Rakefile')           rescue nil
-        FileUtils.rm_rf('app')                rescue nil
-        FileUtils.rm_rf('config/locales')     rescue nil
-        FileUtils.rm_rf('db/seeds.rb')        rescue nil
-        FileUtils.rm_rf('doc')                rescue nil
-        FileUtils.rm_rf('lib')                rescue nil
-        FileUtils.rm_rf('public/images')      rescue nil
-        FileUtils.rm_rf('public/javascripts') rescue nil
-        FileUtils.rm_rf('public/stylesheets') rescue nil
-        FileUtils.rm_rf('test')               rescue nil
-        FileUtils.rm_rf('vendor')             rescue nil
+      def goto_rails(path=nil, &proc)
+        Dir.chdir(path || rails_root, &proc)
       end
       
-      shell.say('Rails app successfully stripped!', Thor::Shell::Color::GREEN)
-    end
-    
-  private
-    
-    def load_environment!
-      Object.const_set('RAILS_ROOT', rails_root)  rescue nil
-      ENV['RAILS_ENV'] = environment
-      $rails_rake_task = true
-      require(File.join(RAILS_ROOT, 'config', 'environment'))
-    end
-    
-    def rails_root
-      return @rails_root if @rails_root
-      
-      root_path = self.options.app
-      root_path = File.expand_path(root_path)
-      
-      unless File.directory?(root_path) and File.file?(File.join(root_path, 'config', 'environment.rb'))
-        shell.say("This is not a rails application!\n#{root_path}", Thor::Shell::Color::RED)
-        exit(1)
+      def environment
+        self.options.environment
       end
       
-      @rails_root = root_path
     end
     
-    def goto_rails(path=nil, &proc)
-      Dir.chdir(path || rails_root, &proc)
+    module Actions
+    private
+      
+      def assert_valid_gem_name!(name)
+        unless name =~ /^[a-zA-Z0-9_-]+$/
+          puts "please specify a valid gem name (/^[a-zA-Z0-9_-]+$/)"
+          exit(1)
+        end
+      end
+      
+      def assert_new_app_path!
+        if File.exist?(self.options.app)
+          shell.say("This path already exists!\n#{self.options.app}", Thor::Shell::Color::RED)
+          exit(1)
+        end
+      end
+      
+      def override_app_path!(path)
+        path = File.expand_path(path)
+        @options = @options.dup
+        @options['app'] = path
+      end
+      
+      def install_rails!(path)
+        override_app_path! path
+        assert_new_app_path!
+        
+        system(%{rails "#{self.options.app}" > /dev/null})
+        shell.say('Rails app successfully created!', Thor::Shell::Color::GREEN)
+        
+        goto_rails do
+          if File.file?('config/locales/en.yml')
+            File.unlink('config/locales/en.yml')
+          end
+          if File.file?('public/index.html')
+            File.unlink('public/index.html')
+          end
+          if File.file?('public/images/rails.png')
+            File.unlink('public/images/rails.png')
+          end
+          if File.file?('public/javascripts/controls.js')
+            File.unlink('public/javascripts/controls.js')
+          end
+          if File.file?('public/javascripts/dragdrop.js')
+            File.unlink('public/javascripts/dragdrop.js')
+          end
+          if File.file?('public/javascripts/effects.js')
+            File.unlink('public/javascripts/effects.js')
+          end
+          if File.file?('public/javascripts/prototype.js')
+            File.unlink('public/javascripts/prototype.js')
+          end
+          
+          Milkshake::Template.evaluate('routes.rb'
+          ).write_to('config/routes.rb')
+        end
+        
+        shell.say('Rails app successfully cleaned!', Thor::Shell::Color::GREEN)
+      end
+      
+      def install_app!
+        goto_rails do
+          
+          Milkshake::Template.evaluate('preinitializer.rb'
+          ).write_to('config/preinitializer.rb')
+          
+          unless File.file?('config/milkshake.yml')
+            Milkshake::Template.evaluate('milkshake.yml'
+            ).write_to('config/milkshake.yml')
+          end
+          
+        end
+        
+        shell.say('Milkshake successfully installed!', Thor::Shell::Color::GREEN)
+      end
+      
+      def install_gem!(name)
+        assert_valid_gem_name! name
+        
+        goto_rails do
+          Milkshake::Template.evaluate('jeweler.rake',
+            :name        => name,
+            :author      => self.options.author,
+            :email       => self.options.email,
+            :summary     => self.options.summary,
+            :description => self.options.description,
+            :website     => self.options.website
+          ).write_to('lib/tasks/jeweler.rake')
+          
+          FileUtils.mkdir_p('rails/initializers')
+          FileUtils.touch('rails/init.rb')
+        end
+        
+        shell.say('Jeweler successfully installed!', Thor::Shell::Color::GREEN)
+      end
+      
+      def install_host!
+        goto_rails do
+          FileUtils.rm_rf('README')             rescue nil
+          FileUtils.rm_rf('Rakefile')           rescue nil
+          FileUtils.rm_rf('app')                rescue nil
+          FileUtils.rm_rf('config/locales')     rescue nil
+          FileUtils.rm_rf('db/seeds.rb')        rescue nil
+          FileUtils.rm_rf('doc')                rescue nil
+          FileUtils.rm_rf('lib')                rescue nil
+          FileUtils.rm_rf('public/images')      rescue nil
+          FileUtils.rm_rf('public/javascripts') rescue nil
+          FileUtils.rm_rf('public/stylesheets') rescue nil
+          FileUtils.rm_rf('test')               rescue nil
+          FileUtils.rm_rf('vendor')             rescue nil
+        end
+        
+        shell.say('Rails app successfully stripped!', Thor::Shell::Color::GREEN)
+      end
+      
     end
     
-    def environment
-      self.options.environment
-    end
+    include Helpers
+    include Actions
     
   end
 end
