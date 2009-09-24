@@ -1,21 +1,33 @@
+
 = Milkshake
 
 Milkshake allows you to compose rails apps from several other rails apps specially packed as gems.
 
-run:
+== Installation
 
-  sudo gem install milkshake
-  cd ./path/to/rails/app
-  milkshake install
+  $ sudo gem install milkshake
 
-in config/milkshake.yml
+== Creating a host application
+
+To create a new host application you must use the <tt>create-host</tt> command.
+
+  $ milkshake create-host my_host_applications
+  Rails app successfully created!
+  Rails app successfully cleaned!
+  Milkshake successfully installed!
+  Rails app successfully stripped!
+  $ ls my_host_applications
+  config db log public script tmp
+
+The most important part of the host application is the <tt>config/milkshake.yml</tt> file.
 
   gems:
-    lalala_more:
-      version: 1.0.20
-    thoughtbot-paperclip:
-      lib: paperclip
-      source: http://gems.github.com
+    my-gem:
+      version: 0.2.38
+      lib:     my_gem
+      source:  http://www.github.com
+
+After changing the <tt>milkshake.yml</tt> or updating some gems you must touch <tt>tmp/relink.txt</tt> and restart your app server (touch <tt>tmp/restart.txt</tt> for passenger).
 
 == Wish list
 
