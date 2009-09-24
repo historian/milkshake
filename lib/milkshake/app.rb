@@ -12,7 +12,7 @@ module Milkshake
     def self.default_author
       @default_author ||= begin
         name = %x[git config --get user.name].chomp
-        name = '[AUTHOR]' if name.nil? or name.empty?
+        name = 'FIX_ME_AUTHOR' if name.nil? or name.empty?
         name
       end
     end
@@ -20,7 +20,7 @@ module Milkshake
     def self.default_email
       @default_email ||= begin
         email = %x[git config --get user.email].chomp
-        email = '[EMAIL]' if email.nil? or email.empty?
+        email = 'FIX_ME_EMAIL' if email.nil? or email.empty?
         email
       end
     end
@@ -47,9 +47,8 @@ module Milkshake
         load_environment!
         
         puts "Loaded gems:"
-        Milkshake.environment.gemspecs.each do |gemspec|
-          puts "#{gemspec.name} (#{gemspec.version})"
-        end
+        data = Milkshake.environment.gemspecs.collect { |gemspec| [gemspec.name, gemspec.version] }
+        shell.print_table(data)
       end
     end
     
@@ -60,15 +59,15 @@ module Milkshake
     end
     
     desc 'create-gem PATH', 'create a new milkshake gem.'
-    method_option :summary, :default => '[SUMMARY]',
+    method_option :summary, :default => 'FIX_ME_SUMMARY',
       :desc   => 'The gem summary',
       :banner => 'string', :type => :string,
       :group  => 'Gem'
-    method_option :description, :default => '[DESCRIPTION]',
+    method_option :description, :default => 'FIX_ME_DESCRIPTION',
       :desc   => 'The gem description',
       :banner => 'string', :type => :string,
       :group  => 'Gem'
-    method_option :website, :default => '[WEBSITE]',
+    method_option :website, :default => 'FIX_ME_WEBSITE',
       :desc   => 'The gem website',
       :banner => 'string', :type => :string,
       :group  => 'Gem'
@@ -80,6 +79,10 @@ module Milkshake
       :desc   => 'The gem author\'s email address',
       :banner => 'string', :type => :string,
       :group  => 'Gem'
+    method_option :git, :default => false,
+      :desc   => 'Initialize git',
+      :type => :boolean,
+      :group  => 'Command'
     def create_gem(path)
       name = File.basename(path)
       assert_valid_gem_name! name
@@ -101,15 +104,15 @@ module Milkshake
     end
     
     desc 'install-gem NAME', 'make a milkshake plugin'
-    method_option :summary, :default => '[SUMMARY]',
+    method_option :summary, :default => 'FIX_ME_SUMMARY',
       :desc   => 'The gem summary',
       :banner => 'string', :type => :string,
       :group  => 'Command'
-    method_option :description, :default => '[DESCRIPTION]',
+    method_option :description, :default => 'FIX_ME_DESCRIPTION',
       :desc   => 'The gem description',
       :banner => 'string', :type => :string,
       :group  => 'Command'
-    method_option :website, :default => '[WEBSITE]',
+    method_option :website, :default => 'FIX_ME_WEBSITE',
       :desc   => 'The gem website',
       :banner => 'string', :type => :string,
       :group  => 'Command'
@@ -120,6 +123,10 @@ module Milkshake
     method_option :email, :default => self.default_email,
       :desc   => 'The gem author\'s email address',
       :banner => 'string', :type => :string,
+      :group  => 'Command'
+    method_option :git, :default => false,
+      :desc   => 'Initialize git',
+      :type => :boolean,
       :group  => 'Command'
     def install_gem(name)
       assert_valid_gem_name! name
@@ -171,6 +178,24 @@ module Milkshake
       def bad_say(msg, exit=true)
         shell.say(msg, Thor::Shell::Color::RED)
         exit(1) if exit
+      end
+      
+      def ask_with_default(statement, default=nil, color=nil)
+        if default
+          answer = shell.ask(statement+" [#{default}]:", color)
+          answer = default if answer.nil? or answer.strip.empty?
+          answer.strip
+        else
+          shell.ask(statement, color)
+        end
+      end
+      
+      def ask_unless_given(statement, value=nil, default=nil, color=nil)
+        if !value.nil? and value != default
+          value
+        else
+          ask_with_default(statement, default, color)
+        end
       end
       
     end
@@ -253,17 +278,35 @@ module Milkshake
         assert_valid_gem_name! name
         
         goto_rails do
+          
           Milkshake::Template.evaluate('jeweler.rake',
             :name        => name,
-            :author      => self.options.author,
-            :email       => self.options.email,
-            :summary     => self.options.summary,
-            :description => self.options.description,
-            :website     => self.options.website
+            :author      => ask_unless_given(
+              'Author',      self.options.author,      self.class.default_author),
+            :email       => ask_unless_given(
+              'Email',       self.options.email,       self.class.default_email),
+            :summary     => ask_unless_given(
+              'Summary',     self.options.summary,     'FIX_ME_SUMMARY'),
+            :description => ask_unless_given(
+              'Description', self.options.description, 'FIX_ME_DESCRIPTION'),
+            :website     => ask_unless_given(
+              'Website',     self.options.website,     'FIX_ME_WEBSITE')
           ).write_to('lib/tasks/jeweler.rake')
           
           FileUtils.mkdir_p('rails/initializers')
           FileUtils.touch('rails/init.rb')
+          FileUtils.rm_rf('app/controllers/application_controller.rb') rescue nil
+          FileUtils.rm_rf('app/helpers/application_helper.rb')         rescue nil
+          
+          if self.options.git shell.yes?('Initialize git? [yN]:')
+            system(%{ git init > /dev/null })
+            
+            Milkshake::Template.evaluate('gitignore'
+            ).write_to('.gitignore')
+            
+            system(%{ git add . > /dev/null })
+            system(%{ git commit -m "First import" > /dev/null })
+          end
         end
         
         good_say('Jeweler successfully installed!')

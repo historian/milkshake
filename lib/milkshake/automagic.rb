@@ -1,3 +1,3 @@
 
-require File.join(File.dirname(__FILE__), *%w[ .. milkshake ])
+require 'milkshake'
 Milkshake.extender.inject_milkshake!

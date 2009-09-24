@@ -61,6 +61,8 @@ Gem::Specification.new do |s|
      "lib/milkshake/validator.rb",
      "lib/milkshake/validator.rb",
      "milkshake.gemspec",
+     "templates/gitignore",
+     "templates/gitignore",
      "templates/jeweler.rake",
      "templates/jeweler.rake",
      "templates/milkshake.yml",
@@ -75,7 +77,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/simonmenke/milkshake}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Make composite rails applications}
   s.test_files = [
     "test/milkshake_test.rb",

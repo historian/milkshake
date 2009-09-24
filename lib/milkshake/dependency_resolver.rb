@@ -90,8 +90,6 @@ module Milkshake
     def tsort_each_child(node, &block)
       deps = (@specs[node].rails_dependencies || {})
       deps.keys.each(&block)
-      deps = (@specs[node].instance_variable_get('@engine_dependencies') || {})
-      deps.keys.each(&block)
     end
     
   end
