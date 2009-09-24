@@ -18,6 +18,10 @@ module Milkshake
       
       Milkshake.extender.extend_rubygems!
       
+      reload!
+    end
+    
+    def reload!
       resolver  = nil
       @gems = @cache.key('environment.gems') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
@@ -36,6 +40,8 @@ module Milkshake
         resolver ||= DependencyResolver.load_for(@options['gems'])
         resolver.names
       end
+      
+      @gemspecs = @ordered_gemspecs = nil
     end
     
     def gemspecs_by_name

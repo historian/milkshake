@@ -2,7 +2,7 @@
 module Milkshake
   class Cache
     
-    attr_accessor :path, :entries
+    attr_accessor :path, :entries, :history
     
     def initialize(path)
       @path = path
@@ -12,6 +12,7 @@ module Milkshake
       rescue
         @entries = {}
       end
+      @history = []
     end
     
     def key(name)
@@ -33,7 +34,12 @@ module Milkshake
     end
     
     def reset!
+      @history << @entries
       @entries = {}
+    end
+    
+    def restore!
+      @entries = @history.pop || {}
     end
     
     def persist!

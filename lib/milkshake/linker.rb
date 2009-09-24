@@ -4,7 +4,7 @@ require 'snapshots'
 module Milkshake
   class Linker
     
-    attr_reader :environment, :validator, :cache
+    attr_reader :environment, :validator, :cache, :current_snapshot
     
     def initialize(environment, validator, cache)
       @environment = environment
@@ -15,7 +15,7 @@ module Milkshake
     def link!
       link_only_once do
         if validator.relink?
-          Snapshots.dump
+          @current_snapshot = Snapshots.dump
           
           link_public_directories!
           
