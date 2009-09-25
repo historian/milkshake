@@ -6,6 +6,8 @@ rescue LoadError
   retry
 end
 
+require 'pathname'
+
 module Milkshake
   class App < Thor
     
@@ -140,6 +142,11 @@ module Milkshake
       install_host!
     end
     
+    desc 'extract-data SHARED_DIR', 'extract all data'
+    def extract_data(path)
+      externalize_data!(path)
+    end
+    
     module Helpers
     private
       
@@ -212,6 +219,12 @@ module Milkshake
       def assert_new_app_path!
         if File.exist?(self.options.app)
           bad_say("This path already exists!\n#{self.options.app}")
+        end
+      end
+      
+      def assert_new_shared_path!(path)
+        if File.exist?(path)
+          bad_say("This path already exists!\n#{path}")
         end
       end
       
@@ -329,6 +342,54 @@ module Milkshake
         end
         
         good_say('Rails app successfully stripped!')
+      end
+      
+      def make_symlink!(old_path, new_path)
+        old_path.rename(new_path)
+        Dir.chdir(old_path.dirname.to_s) do
+          old_path.basename.make_symlink(new_path.relative_path_from(old_path.dirname))
+        end
+      end
+      
+      def externalize_data!(destination)
+        destination = File.expand_path(destination)
+        assert_new_shared_path! destination
+        
+        destination_path = Pathname.new(destination)
+        
+        goto_rails do
+          rails_path    = Pathname.pwd
+          
+          relative_path = Pathname.pwd.relative_path_from(destination_path)
+          relative      = relative_path.to_s
+          puts relative
+          
+          FileUtils.mkdir_p(destination)
+          
+          make_symlink!(
+            rails_path       + 'db',
+            destination_path + 'private')
+          
+          make_symlink!(
+            rails_path       + 'log',
+            destination_path + 'log')
+          
+          FileUtils.mkdir_p('public/system')
+          make_symlink!(
+            rails_path       + 'public/system',
+            destination_path + 'public')
+          
+          FileUtils.mkdir_p('config/settings')
+          make_symlink!(
+            rails_path       + 'config/settings',
+            destination_path + 'settings')
+          
+          make_symlink!(
+            rails_path + 'config/milkshake.yml',
+            destination_path + 'milkshake.yml')
+        end
+        
+        good_say('Data files successfully externalized!')
       end
       
     end
