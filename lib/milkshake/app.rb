@@ -17,7 +17,7 @@ module Milkshake
     
     include Helpers
     include Actions
-    include Defaults
+    extend  Defaults
     
     class_option :app, :default => '.',
       :desc   => 'Path to the rails application',
@@ -129,8 +129,12 @@ module Milkshake
     end
     
     desc 'extract-data SHARED_DIR', 'extract all data'
+    method_option :git, :default => false,
+      :desc   => 'Initialize git',
+      :type => :boolean,
+      :group  => 'Command'
     def extract_data(path)
-      externalize_data!(path)
+      externalize_data! path
     end
     
   end

@@ -81,7 +81,7 @@ module Milkshake
           FileUtils.rm_rf('app/controllers/application_controller.rb') rescue nil
           FileUtils.rm_rf('app/helpers/application_helper.rb')         rescue nil
           
-          if self.options.git shell.yes?('Initialize git? [yN]:')
+          if self.options.git or shell.yes?('Initialize git? [yN]:')
             system(%{ git init > /dev/null })
             
             Milkshake::Template.evaluate('gitignore'
@@ -117,10 +117,14 @@ module Milkshake
       def externalize_data!(shared_path)
         shared_path = pathname_for(shared_path)
         
-        assert_new_shared_path! shared_path
-        shared_path.mkpath
-        
         goto_rails do |rails_path|
+          
+          if (rails_path + 'config/settings').symlink?
+            bad_say("The data of this rails app seems to be already extracted!")
+          end
+          
+          assert_new_shared_path! shared_path
+          shared_path.mkpath
           
           (rails_path + 'public/system').mkpath
           (rails_path + 'config/settings').mkpath
@@ -149,6 +153,18 @@ module Milkshake
             rails_path  + 'config/database.yml',
             shared_path + 'settings/database.yml')
           
+        end
+        
+        if self.options.git or shell.yes?('Initialize git? [yN]:')
+          Dir.chdir(shared_path.to_s) do
+            system(%{ git init > /dev/null })
+            
+            Milkshake::Template.evaluate('gitignore_for_data'
+            ).write_to('.gitignore')
+            
+            system(%{ git add . > /dev/null })
+            system(%{ git commit -m "First snapshot" > /dev/null })
+          end
         end
         
         good_say('Data files successfully externalized!')
