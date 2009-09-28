@@ -79,6 +79,12 @@ module Milkshake
         end
       end
       
+      def assert_shared_path!(path)
+        unless path.exist?
+          bad_say("This path already exists!\n#{path}")
+        end
+      end
+      
       def pathname_for(path, expand=true)
         path = Pathname.new(path) unless Pathname === path
         path = path.expand_path
@@ -92,10 +98,14 @@ module Milkshake
       end
       
       def make_symlink!(old_path, new_path)
-        old_path.rename(new_path)
         Dir.chdir(old_path.dirname.to_s) do
           old_path.basename.make_symlink(new_path.relative_path_from(old_path.dirname))
         end
+      end
+      
+      def swap_and_make_symlink!(old_path, new_path)
+        old_path.rename(new_path)
+        make_symlink! old_path, new_path
       end
       
     end

@@ -43,7 +43,6 @@ Gem applications can be packaged as gems and can be linked back into host applic
 
 * link rake tasks from [gem path]/lib/tasks (is this needed?)
 * migrate down when removing (or downgrading) a gem.
-* Make (optional) external data directory for databases and uploaded or generated files.
 
 == Note on Patches/Pull Requests
  

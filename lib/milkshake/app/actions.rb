@@ -114,6 +114,15 @@ module Milkshake
         good_say('Rails app successfully stripped!')
       end
       
+      def ensure_extrernalized_data!(shared_path)
+        shared_path = pathname_for(shared_path)
+        if shared_path.exist?
+          link_externalized_data! shared_path
+        else
+          externalize_data! shared_path
+        end
+      end
+      
       def externalize_data!(shared_path)
         shared_path = pathname_for(shared_path)
         
@@ -129,27 +138,27 @@ module Milkshake
           (rails_path + 'public/system').mkpath
           (rails_path + 'config/settings').mkpath
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'db',
             shared_path + 'private')
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'log',
             shared_path + 'log')
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'public/system',
             shared_path + 'public')
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'config/settings',
             shared_path + 'settings')
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'config/milkshake.yml',
             shared_path + 'settings/milkshake.yml')
           
-          make_symlink!(
+          swap_and_make_symlink!(
             rails_path  + 'config/database.yml',
             shared_path + 'settings/database.yml')
           
@@ -168,6 +177,45 @@ module Milkshake
         end
         
         good_say('Data files successfully externalized!')
+      end
+      
+      def link_externalized_data!(shared_path)
+        shared_path = pathname_for(shared_path)
+        assert_shared_path! shared_path
+        
+        goto_rails do |rails_path|
+          
+          (rails_path   + 'db').rmtree
+          make_symlink!(
+            rails_path  + 'db',
+            shared_path + 'private')
+          
+          (rails_path   + 'log').rmtree
+          make_symlink!(
+            rails_path  + 'log',
+            shared_path + 'log')
+          
+          (rails_path   + 'public/system').rmtree
+          make_symlink!(
+            rails_path  + 'public/system',
+            shared_path + 'public')
+          
+          (rails_path   + 'config/settings').rmtree
+          make_symlink!(
+            rails_path  + 'config/settings',
+            shared_path + 'settings')
+          
+          (rails_path   + 'config/milkshake.yml').unlink
+          make_symlink!(
+            rails_path  + 'config/milkshake.yml',
+            shared_path + 'settings/milkshake.yml')
+          
+          (rails_path   + 'config/database.yml').unlink
+          make_symlink!(
+            rails_path  + 'config/database.yml',
+            shared_path + 'settings/database.yml')
+          
+        end
       end
       
     end

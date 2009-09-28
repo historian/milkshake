@@ -25,6 +25,24 @@ module Milkshake
         end
       end
       
+      def default_summary
+        'FIX_ME_SUMMARY'
+      end
+      
+      def default_description
+        'FIX_ME_DESCRIPTION'
+      end
+      
+      def default_website
+        'FIX_ME_WEBSITE'
+      end
+      
+      def rename_task(names={})
+        names.each do |old_name, new_name|
+          self.tasks[new_name.to_s] = self.tasks.delete(old_name.to_s)
+        end
+      end
+      
     end
   end
 end
