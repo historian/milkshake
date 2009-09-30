@@ -4,9 +4,9 @@ Milkshake allows you to compose rails apps from several other rails apps special
 
 == Creating a host application
 
-To create a new host application you must use the <tt>create-host</tt> command.
+To create a new host application you must use the <tt>create.host</tt> command.
 
-  $ milkshake create-host my_host_applications
+  $ milkshake create.host my_host_applications
   Rails app successfully created!
   Rails app successfully cleaned!
   Milkshake successfully installed!
@@ -28,7 +28,7 @@ After changing the <tt>milkshake.yml</tt> or updating some gems you must touch <
 
 Gem applications can be packaged as gems and can be linked back into host applications.
 
-  $ milkshake create-gem my_gem_applications
+  $ milkshake create.gem my_gem_applications
   #   anwser the questions milkshake asks you
 
 == Installation

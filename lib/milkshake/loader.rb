@@ -19,11 +19,13 @@ module Milkshake
     
     def initializers
       @cache.key('loader.initializers') do
-        relative_path = ['rails', 'initializers', '**', '*.rb']
-        self.environment.gemspecs.inject([]) do |paths, gemspec|
+        relative_path = %w( rails initializers ** *.rb )
+        paths = []
+        self.environment.gemspecs.each do |gemspec|
           paths.concat Dir.glob(File.join(gemspec.full_gem_path, *relative_path))
-          paths
         end
+        paths.concat Dir.glob(File.join(Rails.root, *relative_path))
+        paths
       end
     end
     
