@@ -195,22 +195,22 @@ module Milkshake
             rails_path  + 'log',
             shared_path + 'log')
           
-          (rails_path   + 'public/system').rmtree
+          (rails_path   + 'public/system').rmtree if File.exist?('public/system')
           make_symlink!(
             rails_path  + 'public/system',
             shared_path + 'public')
           
-          (rails_path   + 'config/settings').rmtree
+          (rails_path   + 'config/settings').rmtree if File.exist?('config/settings')
           make_symlink!(
             rails_path  + 'config/settings',
             shared_path + 'settings')
           
-          (rails_path   + 'config/milkshake.yml').unlink
+          (rails_path   + 'config/milkshake.yml').unlink if File.exist?('config/milkshake.yml')
           make_symlink!(
             rails_path  + 'config/milkshake.yml',
             shared_path + 'settings/milkshake.yml')
           
-          (rails_path   + 'config/database.yml').unlink
+          (rails_path   + 'config/database.yml').unlink if File.exist?('config/database.yml')
           make_symlink!(
             rails_path  + 'config/database.yml',
             shared_path + 'settings/database.yml')

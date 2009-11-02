@@ -51,7 +51,7 @@ module Milkshake
     def gemspecs
       @ordered_gemspecs ||= @order.collect do |name|
         gemspecs_by_name[name]
-      end
+      end.compact
     end
     
     def gem_dependencies
