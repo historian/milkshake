@@ -41,7 +41,7 @@ module Milkshake
         resolver.names
       end
       
-      @gemspecs = @ordered_gemspecs = nil
+      @ordered_gemspecs = nil
     end
     
     def gemspecs_by_name

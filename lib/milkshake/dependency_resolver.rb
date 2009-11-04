@@ -52,7 +52,9 @@ module Milkshake
       dep   = Gem::Dependency.new(name, requirement)
       specs = gemspec_index.search(dep)
       
-      return nil if specs.empty?
+      if specs.empty?
+        raise "Failed to resolve dependency: #{name} #{options.inspect}"
+      end
       
       specs.sort! do |a,b|
         b.version <=> a.version
