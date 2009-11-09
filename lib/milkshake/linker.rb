@@ -17,8 +17,6 @@ module Milkshake
         if validator.relink?
           @current_snapshot = Snapshots.dump
           
-          link_public_directories!
-          
           run_migrations!
           
           validator.persist!
@@ -31,19 +29,6 @@ module Milkshake
     
     def run_migrations!
       ActiveRecord::Migrator.migrate("db/migrate/", nil)
-    end
-    
-    def link_public_directories!
-      public_vendor_path = File.join(Rails.public_path, 'vendor')
-      FileUtils.rm_rf(public_vendor_path)
-      FileUtils.mkdir_p(public_vendor_path)
-      
-      self.environment.gemspecs.each do |gemspec|
-        public_path = File.join(gemspec.full_gem_path, 'public')
-        if File.directory?(public_path)
-          FileUtils.ln_s(public_path, File.join(public_vendor_path, gemspec.name))
-        end
-      end
     end
     
     def link_only_once

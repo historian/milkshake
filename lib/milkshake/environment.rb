@@ -15,6 +15,7 @@ module Milkshake
     def initialize(cache, options={})
       @cache   = cache
       @options = {'gems' => {}}.merge(options)
+      @options['gems']['rack-gem-assets'] = { 'lib' => 'rack/gem_assets' }
       
       Milkshake.extender.extend_rubygems!
       
