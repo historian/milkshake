@@ -30,24 +30,17 @@ module Milkshake
       
       def process_with_milkshake
         process_without_milkshake
-        
-        stack = ActionController::Dispatcher.middleware
-        unless stack.any? { |middleware| Rack::GemAssets === middleware }
-          stack.insert_before(Rails::Rack::Metal, Rack::GemAssets)
-        end
       rescue Exception => e
-        Milkshake.cache.restore!
-        Milkshake.environment.reload!
-        if Milkshake.linker.current_snapshot
-          Snapshots.load(Milkshake.linker.current_snapshot)
+        begin
+          Milkshake.cache.restore!
+          Milkshake.environment.reload!
+          if Milkshake.linker.current_snapshot
+            Snapshots.load(Milkshake.linker.current_snapshot)
+          end
+        rescue Exception
         end
         
-        if @restore_relink
-          raise e
-        else
-          @restore_relink = true
-          retry
-        end
+        raise e
       end
       
     end
