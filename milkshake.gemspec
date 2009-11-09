@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{milkshake}
-  s.version = "0.0.2"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Menke"]
-  s.date = %q{2009-11-02}
+  s.date = %q{2009-11-09}
   s.default_executable = %q{milkshake}
   s.description = %q{Compose rails applications using several smaller rails applications}
   s.email = %q{simon@mrhenry.be}
@@ -101,17 +101,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_runtime_dependency(%q<thor>, [">= 0"])
       s.add_runtime_dependency(%q<snapshots>, [">= 0"])
+      s.add_runtime_dependency(%q<rack-gem-assets>, [">= 0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
       s.add_dependency(%q<yard>, [">= 0"])
       s.add_dependency(%q<thor>, [">= 0"])
       s.add_dependency(%q<snapshots>, [">= 0"])
+      s.add_dependency(%q<rack-gem-assets>, [">= 0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<thor>, [">= 0"])
     s.add_dependency(%q<snapshots>, [">= 0"])
+    s.add_dependency(%q<rack-gem-assets>, [">= 0"])
   end
 end
 
