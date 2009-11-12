@@ -24,18 +24,29 @@ module Milkshake
     
     def reload!
       resolver  = nil
+      index = Gem::SourceIndex.from_installed_gems
+      
       @gems = @cache.key('environment.gems') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
         resolver.gems
       end
       
-      @gemspecs = @cache.key('environment.gemspecs') do
+      @gemspecs = nil
+      @gemspec_versions = @cache.key('environment.gemspec-versions') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
         specs = resolver.specs
-        specs.each { |(name, spec)| spec.store_persistent_load_information! }
-        specs
+        @gemspecs = specs
+        specs.inject({}) { |s, (name, spec)| s[name] = spec.version.to_s ; s  }
       end
-      @gemspecs.each { |(name, spec)| spec.use_persistent_load_information! }
+      
+      @gemspecs ||= @gemspec_versions.inject({}) do |s, (name, version)|
+        specs.index.search(Gem::Dependency.new(name, version))
+        specs.sort! do |a,b|
+          b.version <=> a.version
+        end
+        s[name] = specs.first
+        s
+      end
       
       @order = @cache.key('environment.gems.order') do
         resolver ||= DependencyResolver.load_for(@options['gems'])
