@@ -14,6 +14,8 @@ module Milkshake
         return @migrations if @migrations
         all_migrations = []
         
+        all_migrations.concat(migrations_without_milkshake)
+        
         Milkshake.environment.gemspecs.each do |gemspec|
           migrations_path_for_gemspec = File.join(gemspec.full_gem_path, 'db', 'migrate')
           if File.directory?(migrations_path_for_gemspec)
