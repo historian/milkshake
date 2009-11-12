@@ -40,7 +40,7 @@ module Milkshake
       end
       
       @gemspecs ||= @gemspec_versions.inject({}) do |s, (name, version)|
-        specs.index.search(Gem::Dependency.new(name, version))
+        specs = index.search(Gem::Dependency.new(name, version))
         specs.sort! do |a,b|
           b.version <=> a.version
         end
