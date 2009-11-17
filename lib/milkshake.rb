@@ -60,8 +60,11 @@ module Milkshake
     end
     
     def cache
-      self.cache_file ||= File.join(RAILS_ROOT, 'tmp', 'cache', 'milkshake.cache')
       @cache ||= Cache.new(self.cache_file)
+    end
+    
+    def cache_file
+      @cache_file ||= File.join(RAILS_ROOT, 'tmp', 'cache', 'milkshake.cache')
     end
     
     def persist!
