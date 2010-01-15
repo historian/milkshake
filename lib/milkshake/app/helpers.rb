@@ -108,6 +108,15 @@ module Milkshake
         make_symlink! old_path, new_path
       end
       
+      def safe_rm(path)
+        path = Pathname.new(path) unless Pathname === path
+        if path.file? or path.symlink?
+          path.unlink
+        elsif path.directory?
+          path.rmtree
+        end
+      end
+      
     end
   end
 end

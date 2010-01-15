@@ -97,18 +97,18 @@ module Milkshake
       
       def install_host!
         goto_rails do |rails_root|
-          (rails_root + 'README').unlink             rescue nil
-          (rails_root + 'Rakefile').unlink           rescue nil
-          (rails_root + 'app').rmtree                rescue nil
-          (rails_root + 'config/locales').rmtree     rescue nil
-          (rails_root + 'db/seeds.rb').unlink        rescue nil
-          (rails_root + 'doc').rmtree                rescue nil
-          (rails_root + 'lib').rmtree                rescue nil
-          (rails_root + 'public/images').rmtree      rescue nil
-          (rails_root + 'public/javascripts').rmtree rescue nil
-          (rails_root + 'public/stylesheets').rmtree rescue nil
-          (rails_root + 'test').rmtree               rescue nil
-          (rails_root + 'vendor').rmtree             rescue nil
+          safe_rm(rails_root + 'README')
+          safe_rm(rails_root + 'Rakefile')
+          safe_rm(rails_root + 'app')
+          safe_rm(rails_root + 'config/locales')
+          safe_rm(rails_root + 'db/seeds.rb')
+          safe_rm(rails_root + 'doc')
+          safe_rm(rails_root + 'lib')
+          safe_rm(rails_root + 'public/images')
+          safe_rm(rails_root + 'public/javascripts')
+          safe_rm(rails_root + 'public/stylesheets')
+          safe_rm(rails_root + 'test')
+          safe_rm(rails_root + 'vendor')
         end
         
         good_say('Rails app successfully stripped!')
