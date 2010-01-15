@@ -14,12 +14,12 @@ module Milkshake
     end
     
     def initialize(gems)
-      specs = gems.collect do |k,r|
-        find_gemspec(k, r)
+      specs = gems.collect do |name,options|
+        find_gemspec(name,options)
       end.compact
       
       @names = specs.collect { |spec| spec.name }
-      @specs = specs.inject({}) { |h, spec| h[spec.name] = spec ; h }
+      @specs = specs.inject({}) { |memo, spec| memo[spec.name] = spec ; memo }
       @gems  = gems
     end
     
@@ -56,8 +56,8 @@ module Milkshake
         raise "Failed to resolve dependency: #{name} #{options.inspect}"
       end
       
-      specs.sort! do |a,b|
-        b.version <=> a.version
+      specs.sort! do |left,right|
+        right.version <=> left.version
       end
       
       gemspec = specs.first
