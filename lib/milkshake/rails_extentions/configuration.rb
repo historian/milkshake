@@ -4,9 +4,9 @@ module Milkshake
     module Configuration
       
       def self.included(base)
-        %w( default_gems default_i18n default_load_paths ).each do |m|
-          base.send :alias_method, "#{m}_without_milkshake", m
-          base.send :alias_method, m, "#{m}_with_milkshake"
+        %w( default_gems default_i18n default_load_paths ).each do |meth|
+          base.send :alias_method, "#{meth}_without_milkshake", meth
+          base.send :alias_method, meth, "#{meth}_with_milkshake"
         end
       end
       

@@ -30,7 +30,7 @@ module Milkshake
     
     def evaluate(context={})
       result = @template.dup
-      result.gsub!(/\{\{([a-zA-Z0-9_.-]+)\}\}/) do |m|
+      result.gsub!(/\{\{([a-zA-Z0-9_.-]+)\}\}/) do |match|
         (context[$1] || context[$1.to_sym]).to_s
       end
       result.extend SourceFile
@@ -40,7 +40,7 @@ module Milkshake
     module SourceFile
       def write_to(path)
         FileUtils.mkdir_p(File.dirname(path))
-        File.open(path, 'w+') { |f| f.write self }
+        File.open(path, 'w+') { |file| file.write self }
         self
       end
     end

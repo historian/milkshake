@@ -4,9 +4,9 @@ module Milkshake
     module Initializer
       
       def self.included(base)
-        %w( require_frameworks check_for_unbuilt_gems load_application_initializers process ).each do |m|
-          base.send :alias_method, "#{m}_without_milkshake", m
-          base.send :alias_method, m, "#{m}_with_milkshake"
+        %w( require_frameworks check_for_unbuilt_gems load_application_initializers process ).each do |meth|
+          base.send :alias_method, "#{meth}_without_milkshake", meth
+          base.send :alias_method, meth, "#{meth}_with_milkshake"
         end
       end
       
@@ -30,7 +30,7 @@ module Milkshake
       
       def process_with_milkshake
         process_without_milkshake
-      rescue Exception => e
+      rescue Exception => exception
         begin
           Milkshake.cache.restore!
           Milkshake.environment.reload!
@@ -41,7 +41,7 @@ module Milkshake
           nil
         end
         
-        raise e
+        raise exception
       end
       
     end

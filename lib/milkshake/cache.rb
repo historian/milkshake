@@ -7,7 +7,7 @@ module Milkshake
     def initialize(path)
       @path = path
       begin
-        File.open(@path, 'r') { |f| @entries = Marshal.load(f.read) }
+        File.open(@path, 'r') { |file| @entries = Marshal.load(file.read) }
         raise 'wrong type' unless Hash === @entries
       rescue
         @entries = {}
@@ -43,7 +43,7 @@ module Milkshake
     end
     
     def persist!
-      File.open(@path, 'w+') { |f| f.write Marshal.dump(@entries) }
+      File.open(@path, 'w+') { |file| file.write Marshal.dump(@entries) }
     end
     
   end

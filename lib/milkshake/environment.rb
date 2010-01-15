@@ -36,16 +36,16 @@ module Milkshake
         resolver ||= DependencyResolver.load_for(@options['gems'])
         specs = resolver.specs
         @gemspecs = specs
-        specs.inject({}) { |s, (name, spec)| s[name] = spec.version.to_s ; s  }
+        specs.inject({}) { |memo, (name, spec)| memo[name] = spec.version.to_s ; memo  }
       end
       
-      @gemspecs ||= @gemspec_versions.inject({}) do |s, (name, version)|
+      @gemspecs ||= @gemspec_versions.inject({}) do |memo, (name, version)|
         specs = index.search(Gem::Dependency.new(name, version))
-        specs.sort! do |a,b|
-          b.version <=> a.version
+        specs.sort! do |left,right|
+          right.version <=> left.version
         end
-        s[name] = specs.first
-        s
+        memo[name] = specs.first
+        memo
       end
       
       @order = @cache.key('environment.gems.order') do
@@ -67,8 +67,8 @@ module Milkshake
     end
     
     def gem_dependencies
-      @order.inject([]) do |g, name|
-        g << Rails::GemDependency.new(name, @gems[name])
+      @order.inject([]) do |deps, name|
+        deps << Rails::GemDependency.new(name, @gems[name])
       end
     end
     
