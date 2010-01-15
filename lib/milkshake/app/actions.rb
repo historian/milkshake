@@ -11,28 +11,14 @@ module Milkshake
         system(%{rails "#{self.options.app}" > /dev/null})
         good_say('Rails app successfully created!')
         
-        goto_rails do
-          if File.file?('config/locales/en.yml')
-            File.unlink('config/locales/en.yml')
-          end
-          if File.file?('public/index.html')
-            File.unlink('public/index.html')
-          end
-          if File.file?('public/images/rails.png')
-            File.unlink('public/images/rails.png')
-          end
-          if File.file?('public/javascripts/controls.js')
-            File.unlink('public/javascripts/controls.js')
-          end
-          if File.file?('public/javascripts/dragdrop.js')
-            File.unlink('public/javascripts/dragdrop.js')
-          end
-          if File.file?('public/javascripts/effects.js')
-            File.unlink('public/javascripts/effects.js')
-          end
-          if File.file?('public/javascripts/prototype.js')
-            File.unlink('public/javascripts/prototype.js')
-          end
+        goto_rails do |rails_root|
+          safe_rm(rails_root + 'config/locales/en.yml')
+          safe_rm(rails_root + 'public/index.html')
+          safe_rm(rails_root + 'public/images/rails.png')
+          safe_rm(rails_root + 'public/javascripts/controls.js')
+          safe_rm(rails_root + 'public/javascripts/dragdrop.js')
+          safe_rm(rails_root + 'public/javascripts/effects.js')
+          safe_rm(rails_root + 'public/javascripts/prototype.js')
           
           Milkshake::Template.evaluate('routes.rb'
           ).write_to('config/routes.rb')
@@ -60,7 +46,7 @@ module Milkshake
       def install_gem!(name)
         assert_valid_gem_name! name
         
-        goto_rails do
+        goto_rails do |rails_root|
           
           Milkshake::Template.evaluate('jeweler.rake',
             :name        => name,
@@ -78,8 +64,8 @@ module Milkshake
           
           FileUtils.mkdir_p('rails/initializers')
           FileUtils.touch('rails/init.rb')
-          FileUtils.rm_rf('app/controllers/application_controller.rb') rescue nil
-          FileUtils.rm_rf('app/helpers/application_helper.rb')         rescue nil
+          safe_rm(rails_root + 'app/controllers/application_controller.rb')
+          safe_rm(rails_root + 'app/helpers/application_helper.rb')
           
           if self.options.git or shell.yes?('Initialize git? [yN]:')
             system(%{ git init > /dev/null })
