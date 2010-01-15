@@ -38,6 +38,7 @@ module Milkshake
             Snapshots.load(Milkshake.linker.current_snapshot)
           end
         rescue Exception
+          nil
         end
         
         raise e

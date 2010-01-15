@@ -49,17 +49,7 @@ module Milkshake
         goto_rails do |rails_root|
           
           Milkshake::Template.evaluate('jeweler.rake',
-            :name        => name,
-            :author      => ask_unless_given(
-              'Author',      self.options.author,      self.class.default_author),
-            :email       => ask_unless_given(
-              'Email',       self.options.email,       self.class.default_email),
-            :summary     => ask_unless_given(
-              'Summary',     self.options.summary,     'FIX_ME_SUMMARY'),
-            :description => ask_unless_given(
-              'Description', self.options.description, 'FIX_ME_DESCRIPTION'),
-            :website     => ask_unless_given(
-              'Website',     self.options.website,     'FIX_ME_WEBSITE')
+            gem_options(name)
           ).write_to('lib/tasks/jeweler.rake')
           
           FileUtils.mkdir_p('rails/initializers')
@@ -171,37 +161,61 @@ module Milkshake
         
         goto_rails do |rails_path|
           
-          (rails_path   + 'db').rmtree
+          safe_rm(rails_path + 'db')
           make_symlink!(
             rails_path  + 'db',
             shared_path + 'private')
           
-          (rails_path   + 'log').rmtree
+          safe_rm(rails_path + 'log')
           make_symlink!(
             rails_path  + 'log',
             shared_path + 'log')
           
-          (rails_path   + 'public/system').rmtree if File.exist?('public/system')
+          safe_rm(rails_path + 'public/system')
           make_symlink!(
             rails_path  + 'public/system',
             shared_path + 'public')
           
-          (rails_path   + 'config/settings').rmtree if File.exist?('config/settings')
+          safe_rm(rails_path + 'config/settings')
           make_symlink!(
             rails_path  + 'config/settings',
             shared_path + 'settings')
           
-          (rails_path   + 'config/milkshake.yml').unlink if File.exist?('config/milkshake.yml')
+          safe_rm(rails_path + 'config/milkshake.yml')
           make_symlink!(
             rails_path  + 'config/milkshake.yml',
             shared_path + 'settings/milkshake.yml')
           
-          (rails_path   + 'config/database.yml').unlink if File.exist?('config/database.yml')
+          safe_rm(rails_path + 'config/database.yml')
           make_symlink!(
             rails_path  + 'config/database.yml',
             shared_path + 'settings/database.yml')
           
         end
+      end
+      
+    private
+      
+      def gem_options(name)
+        {
+        :name =>
+          name,
+        
+        :author =>
+          ask_unless_given('Author',      self.options.author,      self.class.default_author),
+        
+        :email =>
+          ask_unless_given('Email',       self.options.email,       self.class.default_email),
+        
+        :summary =>
+          ask_unless_given('Summary',     self.options.summary,     'FIX_ME_SUMMARY'),
+        
+        :description =>
+          ask_unless_given('Description', self.options.description, 'FIX_ME_DESCRIPTION'),
+        
+        :website =>
+          ask_unless_given('Website',     self.options.website,     'FIX_ME_WEBSITE')
+        }
       end
       
     end
