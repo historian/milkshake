@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{milkshake}
-  s.version = "0.1.6"
+  s.version = "0.1.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Menke"]
-  s.date = %q{2009-11-17}
+  s.date = %q{2010-01-21}
   s.default_executable = %q{milkshake}
   s.description = %q{Compose rails applications using several smaller rails applications}
   s.email = %q{simon@mrhenry.be}
@@ -27,57 +27,31 @@ Gem::Specification.new do |s|
      "VERSION",
      "bin/milkshake",
      "lib/milkshake.rb",
-     "lib/milkshake.rb",
-     "lib/milkshake/app.rb",
      "lib/milkshake/app.rb",
      "lib/milkshake/app/actions.rb",
-     "lib/milkshake/app/actions.rb",
-     "lib/milkshake/app/defaults.rb",
      "lib/milkshake/app/defaults.rb",
      "lib/milkshake/app/helpers.rb",
-     "lib/milkshake/app/helpers.rb",
-     "lib/milkshake/automagic.rb",
      "lib/milkshake/automagic.rb",
      "lib/milkshake/cache.rb",
-     "lib/milkshake/cache.rb",
-     "lib/milkshake/dependency_resolver.rb",
      "lib/milkshake/dependency_resolver.rb",
      "lib/milkshake/environment.rb",
-     "lib/milkshake/environment.rb",
-     "lib/milkshake/extender.rb",
      "lib/milkshake/extender.rb",
      "lib/milkshake/linker.rb",
-     "lib/milkshake/linker.rb",
-     "lib/milkshake/loader.rb",
      "lib/milkshake/loader.rb",
      "lib/milkshake/rails_extentions/boot.rb",
-     "lib/milkshake/rails_extentions/boot.rb",
-     "lib/milkshake/rails_extentions/configuration.rb",
      "lib/milkshake/rails_extentions/configuration.rb",
      "lib/milkshake/rails_extentions/initializer.rb",
-     "lib/milkshake/rails_extentions/initializer.rb",
-     "lib/milkshake/rails_extentions/migrations.rb",
      "lib/milkshake/rails_extentions/migrations.rb",
      "lib/milkshake/rails_fallbacks/application_controller.rb",
-     "lib/milkshake/rails_fallbacks/application_controller.rb",
-     "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/rubygems_extentions/specification.rb",
      "lib/milkshake/template.rb",
-     "lib/milkshake/template.rb",
-     "lib/milkshake/validator.rb",
      "lib/milkshake/validator.rb",
      "milkshake.gemspec",
      "templates/gitignore",
-     "templates/gitignore",
-     "templates/gitignore_for_data",
      "templates/gitignore_for_data",
      "templates/jeweler.rake",
-     "templates/jeweler.rake",
-     "templates/milkshake.yml",
      "templates/milkshake.yml",
      "templates/preinitializer.rb",
-     "templates/preinitializer.rb",
-     "templates/routes.rb",
      "templates/routes.rb",
      "test/milkshake_test.rb",
      "test/test_helper.rb"
