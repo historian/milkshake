@@ -15,7 +15,7 @@ module Milkshake
     def link!
       link_only_once do
         if validator.relink?
-          @current_snapshot = Snapshots.dump
+          # @current_snapshot = Snapshots.dump
           
           run_migrations!
           

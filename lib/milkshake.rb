@@ -3,6 +3,8 @@ require 'fileutils'
 
 module Milkshake
   
+  RAILS_VERSION = "2.3.4"
+  
   autoload :DependencyResolver, 'milkshake/dependency_resolver'
   autoload :Environment,        'milkshake/environment'
   autoload :Validator,          'milkshake/validator'

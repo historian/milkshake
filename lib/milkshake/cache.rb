@@ -16,10 +16,11 @@ module Milkshake
     end
     
     def key(name)
-      if @entries.key?(name.to_s)
-        @entries[name.to_s]
+      name = name.to_s
+      if @entries.key?(name)
+        @entries[name]
       elsif block_given?
-        @entries[name.to_s] = yield
+        @entries[name] = yield
       else
         nil
       end

@@ -24,8 +24,9 @@ module Milkshake
         self.environment.gemspecs.each do |gemspec|
           paths.concat Dir.glob(File.join(gemspec.full_gem_path, *relative_path))
         end
-        paths.concat Dir.glob(File.join(Rails.root, 'rails/init.rb'))
-        paths.concat Dir.glob(File.join(Rails.root, *relative_path))
+        rails_root = Rails.root
+        paths.concat Dir.glob(File.join(rails_root, 'rails/init.rb'))
+        paths.concat Dir.glob(File.join(rails_root, *relative_path))
         paths
       end
     end

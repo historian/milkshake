@@ -8,7 +8,7 @@ module Milkshake
         override_app_path! path
         assert_new_app_path!
         
-        system(%{rails "#{self.options.app}" > /dev/null})
+        system(%{rails _#{Milkshake::RAILS_VERSION}_ "#{self.options.app}" > /dev/null})
         good_say('Rails app successfully created!')
         
         goto_rails do |rails_root|
