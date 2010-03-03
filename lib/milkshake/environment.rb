@@ -68,7 +68,11 @@ module Milkshake
     
     def gem_dependencies
       @order.inject([]) do |deps, name|
-        deps << Rails::GemDependency.new(name, @gems[name].to_options)
+        options = @gems[name].inject({}) do |memo, (key, value)|
+          memo[key.to_sym] = value
+          memo
+        end
+        deps << Rails::GemDependency.new(name, options)
       end
     end
     
