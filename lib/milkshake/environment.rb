@@ -68,7 +68,7 @@ module Milkshake
     
     def gem_dependencies
       @order.inject([]) do |deps, name|
-        deps << Rails::GemDependency.new(name, @gems[name])
+        deps << Rails::GemDependency.new(name, @gems[name].to_options)
       end
     end
     
