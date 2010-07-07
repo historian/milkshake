@@ -1,13 +1,6 @@
 module MilkshakeApp::Helpers
 private
   
-  def load_environment!
-    Object.const_set('RAILS_ROOT', rails_root)  rescue nil
-    ENV['RAILS_ENV'] = environment
-    $rails_rake_task = true
-    require(File.join(RAILS_ROOT, 'config', 'environment'))
-  end
-  
   def rails_root
     return @rails_root if @rails_root
     

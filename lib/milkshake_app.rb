@@ -27,17 +27,6 @@ class MilkshakeApp < Thor
     :banner => 'env', :type => :string,
     :group  => 'Global'
   
-  desc 'info', 'list all loaded gems'
-  def info
-    goto_rails do
-      load_environment!
-      
-      puts "Loaded gems:"
-      data = Milkshake.environment.gemspecs.collect { |gemspec| [gemspec.name, gemspec.version] }
-      shell.print_table(data)
-    end
-  end
-  
   desc 'create.app PATH', 'create a new rails app.'
   method_option :'git-data', :default => false,
     :desc   => 'Initialize git for the shared directory',

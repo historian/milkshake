@@ -34,8 +34,9 @@ private
       ).write_to('config/preinitializer.rb')
       
       unless File.file?('config/milkshake.yml')
-        MilkshakeApp::Template.evaluate('milkshake.yml'
-        ).write_to('config/milkshake.yml')
+        MilkshakeApp::Template.evaluate('Gemfile',
+          :version => Milkshake::VERSION,
+        ).write_to('Gemfile')
       end
       
     end

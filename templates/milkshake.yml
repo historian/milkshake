@@ -1,5 +1,0 @@
-gems:
-  my-gem:
-    version: 0.2.38
-    lib:     my_gem
-    source:  http://www.github.com

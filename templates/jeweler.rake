@@ -1,6 +1,7 @@
 
 begin
   require 'jeweler'
+  require 'bundler'
   Jeweler::Tasks.new do |gem|
     gem.name = "{{name}}"
     gem.summary = %Q{{{summary}}}
@@ -8,10 +9,6 @@ begin
     gem.email = "{{email}}"
     gem.homepage = "{{website}}"
     gem.authors = ["{{author}}"]
-    
-    # development dependencies
-    gem.add_development_dependency "milkshake"
-    gem.add_development_dependency "thoughtbot-shoulda"
     
     # rdoc
     gem.has_rdoc = true
@@ -38,10 +35,7 @@ begin
     gem.files += (included_files - ignored_files)
     
     # runtime dependencies
-    milkshake_config = YAML.load_file('config/milkshake.yml')
-    milkshake_config['gems'].each do |name, options|
-      gem.add_runtime_dependency(name, (options['version'] || Gem::Requirement.default))
-    end
+    gem.add_bundler_dependencies
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.executables = ["milkshake"]
   s.default_executable = "milkshake"
 
-  s.files        = Dir.glob("{lib,templates}/**/*") + %w(LICENSE README.md)
+  s.files        = Dir.glob("{app,lib,templates}/**/*") + %w(LICENSE README.md)
   s.require_path = 'lib'
 
   s.add_bundler_dependencies
