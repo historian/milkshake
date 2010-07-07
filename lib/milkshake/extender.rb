@@ -8,7 +8,6 @@ module Milkshake
       else
         extend_boot!
       end
-      extend_rubygems!
     end
     
     # for passenger
@@ -42,10 +41,6 @@ module Milkshake
     
     def extend_frameworks!
       include_module ActiveRecord::Migrator, Milkshake::RailsExtentions::Migrator
-    end
-    
-    def extend_rubygems!
-      include_module Gem::Specification, Milkshake::RubygemsExtentions::Specification
     end
     
   private

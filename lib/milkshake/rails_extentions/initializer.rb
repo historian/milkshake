@@ -4,7 +4,7 @@ module Milkshake
     module Initializer
       
       def self.included(base)
-        %w( require_frameworks check_for_unbuilt_gems load_application_initializers process ).each do |meth|
+        %w( require_frameworks check_for_unbuilt_gems load_application_initializers ).each do |meth|
           base.send :alias_method, "#{meth}_without_milkshake", meth
           base.send :alias_method, meth, "#{meth}_with_milkshake"
         end
@@ -28,20 +28,8 @@ module Milkshake
         load_application_initializers_without_milkshake
       end
       
-      def process_with_milkshake
-        process_without_milkshake
-      rescue Exception => exception
-        begin
-          Milkshake.cache.restore!
-          Milkshake.environment.reload!
-          if Milkshake.linker.current_snapshot
-            Snapshots.load(Milkshake.linker.current_snapshot)
-          end
-        rescue Exception
-          nil
-        end
-        
-        raise exception
+      def load_gems
+        @bundler_loaded ||= Bundler.require :default, Rails.env
       end
       
     end

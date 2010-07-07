@@ -4,7 +4,7 @@ require 'snapshots'
 module Milkshake
   class Linker
     
-    attr_reader :environment, :validator, :cache, :current_snapshot
+    attr_reader :environment, :validator, :cache
     
     def initialize(environment, validator, cache)
       @environment = environment
@@ -15,8 +15,6 @@ module Milkshake
     def link!
       link_only_once do
         if validator.relink?
-          # @current_snapshot = Snapshots.dump
-          
           run_migrations!
           
           validator.persist!
@@ -33,7 +31,9 @@ module Milkshake
     
     def link_only_once
       lock_path  = Milkshake.cache_file
+      FileUtils.mkdir_p(File.dirname(lock_path))
       FileUtils.touch(lock_path)
+      
       lock_file  = File.new(lock_path)
       acquired   = !!lock_file.flock(File::LOCK_EX | File::LOCK_NB)
       if acquired

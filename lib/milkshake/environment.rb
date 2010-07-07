@@ -14,46 +14,12 @@ module Milkshake
     
     def initialize(cache, options={})
       @cache   = cache
-      @options = {'gems' => {}}.merge(options)
-      @options['gems']['rack-gem-assets'] = { 'lib' => 'rack/gem_assets' }
-      
-      Milkshake.extender.extend_rubygems!
       
       reload!
     end
     
     def reload!
-      resolver  = nil
-      index = Gem::SourceIndex.from_installed_gems
-      
-      @gems = @cache.key('environment.gems') do
-        resolver ||= DependencyResolver.load_for(@options['gems'])
-        resolver.gems
-      end
-      
-      @gemspecs = nil
-      @gemspec_versions = @cache.key('environment.gemspec-versions') do
-        resolver ||= DependencyResolver.load_for(@options['gems'])
-        specs = resolver.specs
-        @gemspecs = specs
-        specs.inject({}) { |memo, (name, spec)| memo[name] = spec.version.to_s ; memo  }
-      end
-      
-      @gemspecs ||= @gemspec_versions.inject({}) do |memo, (name, version)|
-        specs = index.search(Gem::Dependency.new(name, version))
-        specs.sort! do |left,right|
-          right.version <=> left.version
-        end
-        memo[name] = specs.first
-        memo
-      end
-      
-      @order = @cache.key('environment.gems.order') do
-        resolver ||= DependencyResolver.load_for(@options['gems'])
-        resolver.names
-      end
-      
-      @ordered_gemspecs = nil
+      %x[bundle lock]
     end
     
     def gemspecs_by_name
