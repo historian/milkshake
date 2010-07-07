@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'milkshake'
+  require 'milkshake_app'
 rescue LoadError
   require 'rubygems'
   $:.unshift File.expand_path('../../lib', __FILE__)
-  require 'milkshake'
+  require 'milkshake_app'
 end
 
-Milkshake::App.start
+MilkshakeApp.start

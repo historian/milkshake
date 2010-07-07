@@ -1,32 +1,28 @@
-
 require 'fileutils'
 
 module Milkshake
   
-  RAILS_VERSION = "2.3.4"
-  
   require 'milkshake/version'
+  require 'milkshake/rails_version'
   
-  autoload :DependencyResolver, 'milkshake/dependency_resolver'
-  autoload :Environment,        'milkshake/environment'
-  autoload :Validator,          'milkshake/validator'
-  autoload :Template,           'milkshake/template'
-  autoload :Extender,           'milkshake/extender'
-  autoload :Linker,             'milkshake/linker'
-  autoload :Loader,             'milkshake/loader'
-  autoload :Cache,              'milkshake/cache'
-  autoload :App,                'milkshake/app'
+  require 'milkshake/dependency_resolver'
+  require 'milkshake/environment'
+  require 'milkshake/validator'
+  require 'milkshake/extender'
+  require 'milkshake/linker'
+  require 'milkshake/loader'
+  require 'milkshake/cache'
   
   module RailsExtentions
-    autoload :Configuration, 'milkshake/rails_extentions/configuration'
-    autoload :Initializer,   'milkshake/rails_extentions/initializer'
-    autoload :Migrator,      'milkshake/rails_extentions/migrations'
-    autoload :GemBoot,       'milkshake/rails_extentions/boot'
-    autoload :VendorBoot,    'milkshake/rails_extentions/boot'
+    require 'milkshake/rails_extentions/configuration'
+    require 'milkshake/rails_extentions/initializer'
+    require 'milkshake/rails_extentions/migrations'
+    require 'milkshake/rails_extentions/boot'
+    require 'milkshake/rails_extentions/boot'
   end
   
   module RubygemsExtentions
-    autoload :Specification, 'milkshake/rubygems_extentions/specification'
+    require 'milkshake/rubygems_extentions/specification'
   end
   
   class << self
