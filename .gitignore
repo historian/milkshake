@@ -1,5 +1,5 @@
-*.sw?
-.DS_Store
+*.gem
+*.log
+doc/
 coverage
-rdoc
-pkg
+.yardoc

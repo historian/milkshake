@@ -1,31 +1,47 @@
-require 'rubygems'
-require 'rake'
+
+desc "build the milkshake"
+task :build do
+  sh "gem build milkshake.gemspec"
+  system('mkdir -p pkg ; mv ./*.gem pkg/')
+end
+
+desc "install the milkshake"
+task :install => [:load_version, :build] do
+  sh "gem install pkg/milkshake-#{Milkshake::VERSION}.gem"
+end
+
+desc "release the milkshake"
+task :release => [:load_version, :build] do
+  unless %x[ git status 2>&1 ].include?('nothing to commit (working directory clean)')
+    puts "Your git stage is not clean!"
+    exit(1)
+  end
+
+  if %x[ git tag 2>&1 ] =~ /^#{Regexp.escape(Milkshake::VERSION)}$/m
+    puts "Please bump your version first!"
+    exit(1)
+  end
+
+  require File.expand_path('../lib/milkshake/version', __FILE__)
+  sh "gem push pkg/milkshake-#{Milkshake::VERSION}.gem"
+  sh "git tag -a -m \"#{Milkshake::VERSION}\" #{Milkshake::VERSION}"
+  sh "git push origin master"
+  sh "git push origin master --tags"
+end
 
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "milkshake"
-    gem.summary = %Q{Make composite rails applications}
-    gem.description = %Q{Compose rails applications using several smaller rails applications}
-    gem.email = "simon@mrhenry.be"
-    gem.homepage = "http://github.com/simonmenke/milkshake"
-    gem.authors = ["Simon Menke"]
-    gem.add_development_dependency "thoughtbot-shoulda"
-    gem.add_development_dependency "yard"
-    gem.add_runtime_dependency 'thor'
-    gem.add_runtime_dependency 'snapshots'
-    gem.add_runtime_dependency 'rack-gem-assets'
-    gem.files += FileList['lib/**/*.rb'] + FileList['templates/**/*']
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  require 'yard'
+  YARD::Rake::YardocTask.new do |t|
+    t.files   = FileList['lib/**/*.rb'].to_a
+    t.options = ['-m', 'markdown', '--files', FileList['documentation/*.markdown'].to_a.join(',')]
   end
-  Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+  puts "YARD not available. Install it with: sudo gem install yard"
 end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
+  test.libs << 'test'
   test.pattern = 'test/**/*_test.rb'
   test.verbose = true
 end
@@ -35,6 +51,7 @@ begin
   Rcov::RcovTask.new do |test|
     test.libs << 'test'
     test.pattern = 'test/**/*_test.rb'
+    test.rcov_opts = %w{--rails --exclude osx\/objc,gems\/,spec\/}
     test.verbose = true
   end
 rescue LoadError
@@ -43,15 +60,6 @@ rescue LoadError
   end
 end
 
-task :test => :check_dependencies
-
-task :default => :test
-
-begin
-  require 'yard'
-  YARD::Rake::YardocTask.new
-rescue LoadError
-  task :yardoc do
-    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
-  end
+task :load_version do
+  require File.expand_path('../lib/milkshake/version', __FILE__)
 end

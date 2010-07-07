@@ -5,6 +5,8 @@ module Milkshake
   
   RAILS_VERSION = "2.3.4"
   
+  require 'milkshake/version'
+  
   autoload :DependencyResolver, 'milkshake/dependency_resolver'
   autoload :Environment,        'milkshake/environment'
   autoload :Validator,          'milkshake/validator'

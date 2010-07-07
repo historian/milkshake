@@ -3,8 +3,9 @@
 begin
   require 'milkshake'
 rescue LoadError
-  $:.unshift File.join(File.dirname(__FILE__), *%w[ .. lib ])
-  retry
+  require 'rubygems'
+  $:.unshift File.expand_path('../../lib', __FILE__)
+  require 'milkshake'
 end
 
 Milkshake::App.start

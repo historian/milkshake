@@ -1,19 +1,14 @@
 
-begin
-  require 'thor'
-rescue LoadError
-  require 'rubygems'
-  retry
-end
-
+require 'thor'
+require 'activesupport'
 require 'pathname'
 
 module Milkshake
   class App < Thor
     
-    autoload :Helpers,  'milkshake/app/helpers'
-    autoload :Actions,  'milkshake/app/actions'
-    autoload :Defaults, 'milkshake/app/defaults'
+    require 'milkshake/app/helpers'
+    require 'milkshake/app/actions'
+    require 'milkshake/app/defaults'
     
     include Helpers
     include Actions

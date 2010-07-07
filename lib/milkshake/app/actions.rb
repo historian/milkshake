@@ -22,6 +22,9 @@ module Milkshake
           
           Milkshake::Template.evaluate('routes.rb'
           ).write_to('config/routes.rb')
+          
+          Milkshake::Template.evaluate('staging.rb'
+          ).write_to('config/environments/staging.rb')
         end
         
         good_say('Rails app successfully cleaned!')
@@ -48,9 +51,15 @@ module Milkshake
         
         goto_rails do |rails_root|
           
+          options = gem_options(name)
+          
           Milkshake::Template.evaluate('jeweler.rake',
-            gem_options(name)
+            options
           ).write_to('lib/tasks/jeweler.rake')
+          
+          Milkshake::Template.evaluate('root_module.rb',
+            options
+          ).write_to("lib/#{options[:name]}.rb")
           
           FileUtils.mkdir_p('rails/initializers')
           FileUtils.touch('rails/init.rb')
@@ -200,6 +209,9 @@ module Milkshake
         {
         :name =>
           name,
+          
+        :module_name =>
+          name.classify,
         
         :author =>
           ask_unless_given('Author',      self.options.author,      self.class.default_author),

@@ -1,50 +1,46 @@
-= Milkshake
+# Milkshake
 
 Milkshake allows you to compose rails apps from several other rails apps specially packed as gems.
 
-== Creating a host application
+## Creating a host application
 
 To create a new host application you must use the <tt>create.host</tt> command.
 
-  $ milkshake create.host my_host_applications
-  Rails app successfully created!
-  Rails app successfully cleaned!
-  Milkshake successfully installed!
-  Rails app successfully stripped!
-  $ ls my_host_applications
-  config db log public script tmp
+    $ milkshake create.host my_host_applications
+    Rails app successfully created!
+    Rails app successfully cleaned!
+    Milkshake successfully installed!
+    Rails app successfully stripped!
+    $ ls my_host_applications
+    config db log public script tmp
 
 The most important part of the host application is the <tt>config/milkshake.yml</tt> file.
 
-  gems:
-    my-gem:
-      version: 0.2.38
-      lib:     my_gem
-      source:  http://www.github.com
+    gems:
+      my-gem:
+        version: 0.2.38
+        lib:     my_gem
+        source:  http://www.github.com
 
 After changing the <tt>milkshake.yml</tt> or updating some gems you must touch <tt>tmp/relink.txt</tt> and restart your app server (touch <tt>tmp/restart.txt</tt> for passenger).
 
-== Creating a gem application
+## Creating a gem application
 
 Gem applications can be packaged as gems and can be linked back into host applications.
 
-  $ milkshake create.gem my_gem_applications
-  #   anwser the questions milkshake asks you
+    $ milkshake create.gem my_gem_applications
+    #   anwser the questions milkshake asks you
 
-== Installation
+## Installation
 
-  #   you need gemcutter first
-  $ sudo gem install gemcutter
-  $ sudo gem tumble
-  #   then just install milkshake
-  $ sudo gem install milkshake
+    [sudo] gem install milkshake
 
-== Wish list
+## Wish list
 
 * link rake tasks from [gem path]/lib/tasks (is this needed?)
 * migrate down when removing (or downgrading) a gem.
 
-== Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -55,6 +51,6 @@ Gem applications can be packaged as gems and can be linked back into host applic
   bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2009 Simon Menke. See LICENSE for details.

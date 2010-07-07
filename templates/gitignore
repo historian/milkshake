@@ -1,17 +1,17 @@
 
 .DS_Store
 
+*.gem
+*.gemspec
+
 log/*
 tmp/*
 
-lib/tasks/vendor
-public/vendor
+public/system
 
 db/system
 db/*.sqlite3
 db/schema*
 db/snapshots
 
-./*.gem
-./pkg
 ./rdoc

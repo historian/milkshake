@@ -18,12 +18,7 @@ begin
     gem.rdoc_options << '--title' << "{{name}}"
     gem.rdoc_options << '--line-numbers' << '--inline-source'
     
-    included_files = FileList['app/**/*.rb']
-    
-    ignored_files  = FileList['app/controllers/application_controller.rb'] +
-                     FileList['app/helpers/application_helper.rb']
-    
-    gem.extra_rdoc_files += (included_files - ignored_files)
+    gem.extra_rdoc_files += FileList['app/**/*.rb']
     
     # files
     included_files = FileList['lib/**/*.rb'] +
@@ -36,10 +31,7 @@ begin
                      FileList['db/migrate/*.{rb}'] +
                      FileList['public/**/*']
     
-    ignored_files  = FileList['app/controllers/application_controller.rb'] +
-                     FileList['app/helpers/application_helper.rb'] +
-                     FileList['public/{404,422,500}.html'] +
-                     FileList['public/vendor/**/*'] +
+    ignored_files  = FileList['public/{404,422,500}.html'] +
                      FileList['public/system/**/*'] +
                      FileList['lib/tasks/jeweler.rb']
     
