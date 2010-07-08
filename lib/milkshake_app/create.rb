@@ -1,5 +1,6 @@
 class MilkshakeApp::Create < MilkshakeApp
   
+  extend  Defaults
   namespace :create
   
   desc 'app PATH', 'create a new rails app.'

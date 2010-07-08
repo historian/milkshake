@@ -35,7 +35,7 @@ private
       
       unless File.file?('config/milkshake.yml')
         MilkshakeApp::Template.evaluate('Gemfile',
-          :version => Milkshake::VERSION,
+          :version => Milkshake::VERSION
         ).write_to('Gemfile')
       end
       
@@ -95,6 +95,59 @@ private
     end
     
     good_say('Rails app successfully stripped!')
+  end
+  
+  def upgrade_app!
+    goto_rails do
+      assert_legacy_milkshake_app!
+      
+      gems = YAML.load_file(rails_root + 'config/milkshake.yml')['gems'] || {}
+      File.open(rails_root + 'Gemfile', 'w+') do |gemfile|
+        gemfile.puts "source :rubygems"
+        gemfile.puts
+        gems.keys.sort.each do |name|
+          version = gems[name]['version'] || '>= 0'
+          lib     = gems[name]['lib']
+          lib     = ", :require => #{lib.inspect}" if lib
+          gemfile.puts "gem #{name.inspect}, #{version.inspect}#{lib}"
+        end
+      end
+      
+      unless File.exist?('config/environments/staging.rb')
+        MilkshakeApp::Template.evaluate('staging.rb'
+        ).write_to('config/environments/staging.rb')
+      end
+      
+      if File.exist?('.gitignore')
+        MilkshakeApp::Template.evaluate('gitignore'
+        ).write_to('.gitignore')
+      end
+      
+      if File.exist?('lib/tasks/jeweler.rake')
+        load('lib/tasks/jeweler.rake')
+        gemspec = Rake.application.jeweler.gemspec
+        
+        MilkshakeApp::Template.evaluate('jeweler.rake',
+          {
+          :name        => gemspec.name,
+          :author      => gemspec.authors.first,
+          :email       => gemspec.email,
+          :summary     => gemspec.summary,
+          :description => gemspec.description,
+          :website     => gemspec.homepage
+          }
+        ).write_to('lib/tasks/jeweler.rake')
+      end
+      
+      MilkshakeApp::Template.evaluate('preinitializer.rb'
+      ).write_to('config/preinitializer.rb')
+      
+      safe_rm(rails_root + 'config/milkshake.yml')
+      safe_rm(rails_root + 'tmp/cache/milkshake.cache')
+      
+    end
+    
+    good_say('Rails app successfully upgraded!')
   end
   
   def ensure_extrernalized_data!(shared_path)

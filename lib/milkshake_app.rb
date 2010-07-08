@@ -15,6 +15,7 @@ class MilkshakeApp < Thor
   
   require 'milkshake_app/create'
   require 'milkshake_app/install'
+  require 'milkshake_app/upgrade'
   require 'milkshake_app/data'
   
   include Helpers
@@ -23,26 +24,18 @@ class MilkshakeApp < Thor
   
   namespace :default
   
-  # def self.start(given_args = ARGV, config = {})
-  #   if self == MilkshakeApp
-  #     case given_args[0]
-  #     when 'deploy'
-  #       given_args[0] = 'deploy:version'
-  #     when 'build'
-  #       given_args[0] = 'build:current'
-  #     end
-  #   end
-  #   super(given_args, config)
-  # end
-  
-  def self.banner(task)
-    "#{banner_base} #{task.formatted_usage(self, true)}"
+  def self.banner(task, *args)
+    if task.name == 'help'
+      "milkshake #{task.formatted_usage(self, false)}"
+    else
+      "milkshake #{task.formatted_usage(self, true)}"
+    end
   end
   
-  def help(meth=nil)
-    if meth && !self.respond_to?(meth)
-      klass, task = Thor::Util.find_class_and_task_by_namespace(meth)
-      klass.start(["-h", task].compact, :shell => self.shell)
+  def help(task=nil, subcommand=false)
+    if task && !self.respond_to?(task)
+      klass, task = Thor::Util.find_class_and_task_by_namespace(task)
+      klass.new.help(task, true)
     else
       super
     end

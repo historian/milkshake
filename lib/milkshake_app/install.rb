@@ -1,5 +1,6 @@
 class MilkshakeApp::Install < MilkshakeApp
   
+  extend  Defaults
   namespace :install
   
   desc 'app', 'install the milkshake preinitializer'

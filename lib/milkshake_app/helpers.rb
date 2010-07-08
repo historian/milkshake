@@ -11,7 +11,7 @@ private
       bad_say("This is not a rails application!\n#{root_path}")
     end
     
-    @rails_root = root_path
+    @rails_root = Pathname.new(root_path)
   end
   
   def goto_rails(path=nil)
@@ -58,8 +58,8 @@ private
   end
   
   def assert_new_app_path!
-    if File.exist?(self.options.app)
-      bad_say("This path already exists!\n#{self.options.app}")
+    if File.exist?(rails_root)
+      bad_say("This path already exists!\n#{rails_root}")
     end
   end
   
@@ -72,6 +72,12 @@ private
   def assert_shared_path!(path)
     unless path.exist?
       bad_say("This path already exists!\n#{path}")
+    end
+  end
+  
+  def assert_legacy_milkshake_app!
+    unless File.exist?(File.join(self.options.app, 'config/milkshake.yml'))
+      bad_say("This is not a legacy milkshake app!\n#{self.options.app}")
     end
   end
   

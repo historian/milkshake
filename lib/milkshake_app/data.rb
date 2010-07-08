@@ -1,5 +1,6 @@
 class MilkshakeApp::Data < MilkshakeApp
   
+  extend  Defaults
   namespace :data
   
   desc 'extract SHARED_DIR', 'extract all data'
