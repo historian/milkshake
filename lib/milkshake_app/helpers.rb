@@ -25,11 +25,11 @@ private
   end
   
   def good_say(msg)
-    shell.say(msg, Thor::Shell::Color::GREEN)
+    shell.say_status('Info', msg)
   end
   
   def bad_say(msg, exit=true)
-    shell.say(msg, Thor::Shell::Color::RED)
+    shell.say_status('Error', msg, :red)
     exit(1) if exit
   end
   

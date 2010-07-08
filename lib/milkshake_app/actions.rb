@@ -111,6 +111,10 @@ private
           lib     = ", :require => #{lib.inspect}" if lib
           gemfile.puts "gem #{name.inspect}, #{version.inspect}#{lib}"
         end
+        gemfile.puts
+        gemfile.puts "group :development do"
+        gemfile.puts "  gem 'sqlite3-ruby', :require => 'sqlite3'"
+        gemfile.puts "end"
       end
       
       unless File.exist?('config/environments/staging.rb')
