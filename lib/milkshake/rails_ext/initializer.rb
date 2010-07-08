@@ -32,12 +32,6 @@ module Milkshake::RailsExt::Initializer
       'rails/initializers/**/*.rb',
       Rails.root))
 
-    Bundler::SPECS.each do |gemspec|
-      paths.concat Dir.glob(File.expand_path(
-        'rails/init.rb',
-        gemspec.full_gem_path))
-    end
-
     paths.concat Dir.glob(File.expand_path(
       'rails/init.rb',
       Rails.root))

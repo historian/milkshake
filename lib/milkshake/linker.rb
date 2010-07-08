@@ -22,7 +22,7 @@ private
   end
 
   def link_only_once
-    lock_path  = relink_txt_path
+    lock_path  = relink_lck_path
     FileUtils.mkdir_p(File.dirname(lock_path))
     FileUtils.touch(lock_path)
 
@@ -48,6 +48,10 @@ private
 
   def relink_txt_path
     @relink_txt_path ||= File.join(Rails.root, 'tmp/relink.txt')
+  end
+
+  def relink_lck_path
+    @relink_lck_path ||= File.join(Rails.root, 'tmp/relink.lck')
   end
 
 end

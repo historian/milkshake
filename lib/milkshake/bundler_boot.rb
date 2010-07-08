@@ -15,21 +15,22 @@ class Milkshake::BundlerBoot
   end
 
   def load_initializer
+    # phusion already deals with bundler
     unless defined? PhusionPassenger
+      
+      # don't load bundler if it's already loaded
       unless defined? Bundler
         load_bundler
       end
+      
       setup_load_paths
     end
-
-    setup_app_load_path
 
     require 'initializer'
   end
 
   def load_bundler
     begin
-      require 'rubygems'
       require 'bundler'
     rescue LoadError
       raise "Could not load the bundler gem. " +
@@ -51,28 +52,6 @@ class Milkshake::BundlerBoot
   rescue Bundler::GemNotFound
     raise RuntimeError, "Bundler couldn't find some gems. " +
       "Did you run `bundle install`?"
-  end
-
-  def setup_app_load_path
-    Bundler::SPECS.each do |gemspec|
-      gem_path = gemspec.full_gem_path
-      idx = $:.index(File.expand_path('lib', gem_path))
-
-      load_path = File.expand_path('app', gem_path)
-      $:.insert(idx, load_path) if File.directory?(load_path)
-
-      load_path = File.expand_path('app/models', gem_path)
-      $:.insert(idx, load_path) if File.directory?(load_path)
-
-      load_path = File.expand_path('app/helpers', gem_path)
-      $:.insert(idx, load_path) if File.directory?(load_path)
-
-      load_path = File.expand_path('app/controllers', gem_path)
-      $:.insert(idx, load_path) if File.directory?(load_path)
-
-      load_path = File.expand_path('app/metal', gem_path)
-      $:.insert(idx, load_path) if File.directory?(load_path)
-    end
   end
 
 end

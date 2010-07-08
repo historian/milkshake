@@ -1,9 +1,4 @@
-module Rails
-  
+unless defined?(Milkshake)
   require 'milkshake'
-  
-  def self.pick_boot
-    Milkshake::BundlerBoot.new
-  end
-  
+  Milkshake::BundlerBoot.new.run
 end
