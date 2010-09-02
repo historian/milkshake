@@ -2,7 +2,6 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'bundler'
 require 'milkshake/version'
 
 Gem::Specification.new do |s|
@@ -24,5 +23,7 @@ Gem::Specification.new do |s|
   s.files        = Dir.glob("{app,lib,templates}/**/*") + %w(LICENSE README.md)
   s.require_path = 'lib'
 
-  s.add_bundler_dependencies
+  s.add_runtime_dependency 'opts',    '~> 0.0'
+  s.add_runtime_dependency 'bundler', '~> 1.0'
+
 end

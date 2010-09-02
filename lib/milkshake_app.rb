@@ -1,65 +1,97 @@
-require 'thor'
-
-class MilkshakeApp < Thor
+class MilkshakeApp
   
+  require 'opts'
   require 'pathname'
-  require 'fileutils'
   
-  require 'milkshake/version'
-  require 'milkshake/rails_version'
-  
-  require 'milkshake_app/helpers'
-  require 'milkshake_app/actions'
+  require 'milkshake'
   require 'milkshake_app/defaults'
   require 'milkshake_app/template'
+  require 'milkshake_app/config'
   
-  require 'milkshake_app/create'
-  require 'milkshake_app/install'
-  require 'milkshake_app/upgrade'
-  require 'milkshake_app/data'
-  
-  include Helpers
-  include Actions
+  include Opts::DSL
   extend  Defaults
   
-  namespace :default
+  def initialize
+    @config = MilkshakeApp::Config.new
+  end
   
-  def self.banner(task, *args)
-    if task.name == 'help'
-      "milkshake #{task.formatted_usage(self, false)}"
-    else
-      "milkshake #{task.formatted_usage(self, true)}"
+  class_use Opts::Shell
+  class_use Opts::ErrorHandler
+  class_use Opts::Environment, 'MILKSHAKE_'
+  class_use Opts::ManHelp,
+    :path    => File.expand_path('../../man', __FILE__),
+    :default => 'milkshake'
+  
+  class_option "app",
+    :short   => 'a',
+    :default => '.',
+    :type    => :string
+  
+  class_option "environment",
+    :short   => 'e',
+    :default => self.default_environment,
+    :type    => :string
+  
+  
+  argument 'NAME'
+  def new(env, args)
+    app_root = Pathname.new(File.expand_path(env['NAME'], env['APP']))
+    
+    if app_root.exist?
+      raise "destination already exists!"
+    end
+    
+    app_root.mkpath
+    (app_root + 'log').mkpath
+    (app_root + 'private').mkpath
+    (app_root + 'public').mkpath
+    (app_root + 'tmp').mkpath
+    
+    (app_root + 'config.ru').open('w+', 0644) do |file|
+      file.write <<-EOC.gsub(/^\s+/m, '')
+        require 'milkshake'
+        
+        MILKSHAKE_ROOT = File.dirname(__FILE__)
+        run Milkshake.application
+      EOC
+    end
+    
+    (app_root + 'config.yml').open('w+', 0644) do |file|
+      file.write <<-EOC.gsub(/^\s+/m, '')
+        --- {}
+      EOC
+    end
+    
+    (app_root + 'Gemfile').open('w+', 0644) do |file|
+      file.write <<-EOC.gsub(/^\s+/m, '')
+        source :rubygems
+        
+        gem 'rails'
+      EOC
     end
   end
   
-  def help(task=nil, subcommand=false)
-    if task && !self.respond_to?(task)
-      klass, task = Thor::Util.find_class_and_task_by_namespace(task)
-      klass.new.help(task, true)
-    else
-      super
-    end
+  
+  def config(env, args)
+    @config.call(env, args)
   end
   
-  def method_missing(meth, *args)
-    if self.class == MilkshakeApp
-      meth = meth.to_s
-      klass, task = Thor::Util.find_class_and_task_by_namespace(meth)
-      args.unshift(task) if task
-      klass.start(args, :shell => self.shell)
-    else
-      super
-    end
+  
+  def rake(env, args)
+    Object.const_set('MILKSHAKE_ROOT', File.expand_path(env['APP']))
+    Milkshake.application.rake(*args)
   end
   
-  class_option :app, :default => '.',
-    :desc   => 'Path to the rails application',
-    :banner => 'rails_root', :type => :string,
-    :group  => 'Global'
   
-  class_option :environment, :default => self.default_environment,
-    :desc   => 'Rails environment',
-    :banner => 'env', :type => :string,
-    :group  => 'Global'
+  def exec(env, args)
+    Object.const_set('MILKSHAKE_ROOT', File.expand_path(env['APP']))
+    Milkshake.application.exec(*args)
+  end
+  
+  
+  def console(env, args)
+    Object.const_set('MILKSHAKE_ROOT', File.expand_path(env['APP']))
+    Milkshake.application.console(*args)
+  end
   
 end

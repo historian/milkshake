@@ -1,0 +1,22 @@
+require 'milkshake'
+Milkshake.application.boot!
+
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+
+require 'tasks/rails'
+
+class Rake::Task
+  def overwrite(&block)
+    @actions.clear
+    enhance(&block)
+  end
+end
+
+ENV['SCHEMA'] = File.expand_path('private/schema.rb', MILKSHAKE_ROOT)
+
+Rake::Task[:environment].overwrite do
+  $rails_rake_task = true
+  require File.expand_path('../config/environment', __FILE__)
+end

@@ -8,4 +8,4 @@ rescue LoadError
   require 'milkshake_app'
 end
 
-MilkshakeApp.start
+MilkshakeApp.new.call({}, ARGV.dup)
