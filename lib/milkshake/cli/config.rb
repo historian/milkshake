@@ -1,4 +1,4 @@
-class MilkshakeApp::Config
+class Milkshake::CLI::Config
   
   require 'yaml'
   

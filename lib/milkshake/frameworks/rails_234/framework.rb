@@ -3,6 +3,8 @@ module Rails
 
     require 'shellwords'
 
+    self.name = 'rails_234'
+
     def boot
       require File.expand_path('../config/_boot.rb', __FILE__)
     end
@@ -27,20 +29,20 @@ module Rails
       Kernel.exec(
         Shellwords.shelljoin(['rake', '-f', rakefile] + args))
     end
-    
+
     def exec(*args)
       command = args.shift
       if command !~ /^script\//
         raise "Unknown executable"
       end
-      
+
       ARGV.clear and ARGV.concat(args)
-      
+
       milkshake.boot!
-      
+
       require File.expand_path('../'+command, __FILE__)
     end
-    
+
     def console(*args)
       exec 'script/console', *args
     end

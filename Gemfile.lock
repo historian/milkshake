@@ -1,0 +1,27 @@
+PATH
+  remote: /Users/simon
+  specs:
+    opts (0.0.1)
+
+PATH
+  remote: /Users/simon/lalala
+  specs:
+
+PATH
+  remote: .
+  specs:
+    milkshake (1.0.0.pre1)
+      bundler (~> 1.0)
+      opts (~> 0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.0)
+  milkshake!
+  opts (~> 0.0)

@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "milkshake"
-  
+
   s.executables = ["milkshake"]
   s.default_executable = "milkshake"
 
-  s.files        = Dir.glob("{app,lib,templates}/**/*") + %w(LICENSE README.md)
+  s.files        = Dir.glob("{app,lib,templates,milkshake}/**/*") + %w(LICENSE README.md)
   s.require_path = 'lib'
 
   s.add_runtime_dependency 'opts',    '~> 0.0'
