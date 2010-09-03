@@ -1,6 +1,8 @@
 module Rails
   class Framework < Milkshake::Framework
 
+    require 'shellwords'
+
     def boot
       require File.expand_path('../config/_boot.rb', __FILE__)
     end
@@ -20,10 +22,10 @@ module Rails
     end
 
     def rake(*args)
-      ARGV.clear and ARGV.concat(args)
       rakefile = File.expand_path('../Rakefile', __FILE__)
       Dir.chdir File.expand_path(MILKSHAKE_ROOT)
-      Kernel.exec("rake -f #{rakefile.inspect} #{ARGV.collect(&:inspect).join(' ')}")
+      Kernel.exec(
+        Shellwords.shelljoin(['rake', '-f', rakefile] + args))
     end
     
     def exec(*args)
