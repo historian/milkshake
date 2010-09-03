@@ -10,12 +10,18 @@ class Milkshake::Framework
 
       Milkshake::Framework.framework = base
     end
+
+    attr_accessor :name
   end
 
   attr_reader :milkshake
 
   def initialize(milkshake)
     @milkshake = milkshake
+  end
+
+  def name
+    self.class.name
   end
 
   def boot

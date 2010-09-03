@@ -1,6 +1,8 @@
 module Rails
   class Framework < Milkshake::Framework
 
+    self.name = 'rails_234'
+
     def boot
       require File.expand_path('../config/_boot.rb', __FILE__)
     end
@@ -25,20 +27,20 @@ module Rails
       Dir.chdir File.expand_path(MILKSHAKE_ROOT)
       Kernel.exec("rake -f #{rakefile.inspect} #{ARGV.collect(&:inspect).join(' ')}")
     end
-    
+
     def exec(*args)
       command = args.shift
       if command !~ /^script\//
         raise "Unknown executable"
       end
-      
+
       ARGV.clear and ARGV.concat(args)
-      
+
       milkshake.boot!
-      
+
       require File.expand_path('../'+command, __FILE__)
     end
-    
+
     def console(*args)
       exec 'script/console', *args
     end

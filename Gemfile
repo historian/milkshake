@@ -1,2 +1,3 @@
-source :gemcutter
+workspaces
+source :rubygems
 gemspec

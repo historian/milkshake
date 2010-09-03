@@ -1,4 +1,4 @@
-module MilkshakeApp::Defaults
+module Milkshake::CLI::Defaults
   
   def default_environment
     @default_environment ||= begin
