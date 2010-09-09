@@ -25,5 +25,4 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'opts',    '~> 0.0'
   s.add_runtime_dependency 'bundler', '~> 1.0'
-
 end
