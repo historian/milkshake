@@ -1,8 +1,5 @@
 # -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
-require 'milkshake/version'
+require File.expand_path("../lib/milkshake/version", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "milkshake"
@@ -17,10 +14,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "milkshake"
 
-  s.executables = ["milkshake"]
-  s.default_executable = "milkshake"
+  s.add_development_dependency "bundler", ">= 1.0.0"
 
-  s.files        = Dir.glob("{app,lib,templates,milkshake}/**/*") + %w(LICENSE README.md)
+  s.files        = `git ls-files`.split("\n")
+  s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'
 
   s.add_runtime_dependency 'opts',    '~> 0.0'

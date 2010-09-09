@@ -5,7 +5,6 @@ class Milkshake::CLI
   require 'opts'
   require 'pathname'
 
-  require 'milkshake/hook'
   require 'milkshake/cli/defaults'
   require 'milkshake/cli/config'
   require 'milkshake/cli/commands'
