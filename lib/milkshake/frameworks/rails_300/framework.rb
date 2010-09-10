@@ -6,11 +6,11 @@ module Rails
     self.name = 'rails_300'
 
     def boot
-      # require File.expand_path('../config/boot.rb', __FILE__)
+      require File.expand_path('../config/boot.rb', __FILE__)
     end
 
     def setup
-      # require File.expand_path('../config/environment.rb', __FILE__)
+      require File.expand_path('../config/environment.rb', __FILE__)
     end
 
     def app
