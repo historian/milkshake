@@ -1,142 +1,62 @@
-class Milkshake
-
-  require 'fileutils'
+module Milkshake
+  
+  require 'thor'
+  require 'pathname'
+  
   require 'milkshake/version'
-  require 'milkshake/framework'
-
+  
+  require 'milkshake/shared_helpers'
+  require 'milkshake/cli'
+  require 'milkshake/ui'
+  require 'milkshake/settings'
+  
   class << self
-    attr_accessor :application
     
-    def application
-      @application ||= new
-    end
-  end
-
-  def initialize
-
-  end
-
-  def framework
-    @framework ||= select_framework.new(self)
-  end
-  
-  def boot!
-    @is_booted ||= begin
-      self.framework.boot
-      true
-    end
-  end
-  
-  def booted?
-    @is_booted || false
-  end
-  
-  def setup!
-    @is_setup ||= begin
-      self.framework.setup
-      true
-    end
-  end
-  
-  def setup?
-    @is_setup || false
-  end
-  
-  def app
-    @app ||= begin
-      boot!
-      setup!
-      self.framework.app
-    end
-  end
-  
-  def rake(*args)
-    self.framework.rake(*args)
-  end
-  
-  def exec(*args)
-    self.framework.exec(*args)
-  end
-  
-  def console(*args)
-    self.framework.console(*args)
-  end
-  
-  def call(env)
-    self.app.call(env)
-  end
-
-private
-
-  def select_framework
-    frameworks = File.expand_path('../milkshake/frameworks', __FILE__)
-  
-    setup_milkshake_root
-    setup_bundler
-  
-    case
+    attr_writer :ui
     
-    when spec = Gem.loaded_specs['rails']
-      case spec.version.to_s
-      when '2.3.4'
-        require File.expand_path('rails_234/framework', frameworks)
-      when '3.0.0'
-        require File.expand_path('rails_300/framework', frameworks)
+    def ui
+      @ui ||= UI.new
+    end
+    
+    def root
+      default_rackupfile.dirname.expand_path
+    end
+    
+    def app_config_path
+      ENV['MILKSHAKE_APP_CONFIG'] ?
+        Pathname.new(ENV['MILKSHAKE_APP_CONFIG']).expand_path(root) :
+        root.join('.milkshake')
+    end
+    
+    def settings
+      @settings ||= Settings.new(app_config_path)
+    end
+    
+    def default_rackupfile
+      rackupfile = find_rackupfile
+      raise RackupfileNotFound, "Could not locate config.ru" unless rackupfile
+      Pathname.new(rackupfile)
+    end
+    
+    def find_rackupfile
+      given = ENV['MILKSHAKE_RACKUPFILE']
+      return given if given && !given.empty?
+    
+      previous = nil
+      current  = File.expand_path(Dir.pwd)
+    
+      until !File.directory?(current) || current == previous
+        filename = File.join(current, 'config.ru')
+        return filename if File.file?(filename)
+        current, previous = File.expand_path("..", current), current
       end
+    end
     
-    end
-  
-    unless Milkshake::Framework.framework
-      raise 'No framework detected'
-    end
-  
-    Milkshake::Framework.framework
-  end
-  
-  def setup_milkshake_root
-    unless defined?(::MILKSHAKE_ROOT)
-      root = ENV['MILKSHAKE_ROOT'] || '.'
-      root = File.expand_path(root)
-      Object.const_set('MILKSHAKE_ROOT', root)
-    end
-  end
-
-  def setup_bundler
-    # phusion already deals with bundler
-    unless defined? PhusionPassenger
-
-      # don't load bundler if it's already loaded
-      unless defined? Bundler
-        load_bundler
+    def gemspecs
+      if defined? ::Bundler
+        Bundler.load.specs
       end
-
-      setup_load_paths
     end
+    
   end
-
-  def load_bundler
-    begin
-      require 'bundler'
-    rescue LoadError
-      raise "Could not load the bundler gem. " +
-        "Install it with `gem install bundler`."
-    end
-
-    if Gem::Version.new(Bundler::VERSION) <= Gem::Version.new("0.9.24")
-      raise RuntimeError, "Your bundler version is too old. " +
-        "Run `gem install bundler` to upgrade."
-    end
-
-    true
-  end
-
-  def setup_load_paths
-    # Set up load paths for all bundled gems
-    ENV["BUNDLE_GEMFILE"] = File.expand_path("Gemfile", MILKSHAKE_ROOT)
-    Bundler.setup
-  rescue Bundler::GemNotFound
-    raise RuntimeError, "Bundler couldn't find some gems. " +
-      "Did you run `bundle install`?"
-  end
-  
 end

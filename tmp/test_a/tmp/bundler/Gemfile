@@ -1,0 +1,5 @@
+source :rubygems
+path("/Users/Simon/Projects", {}) # lalala
+gem("lalala_core")
+gem("lalala_pages")
+gem("fd-cache-money", {"git"=>"git://github.com/fd/cache-money.git"})

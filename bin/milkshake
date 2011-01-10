@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'milkshake/cli'
+  require 'milkshake'
 rescue LoadError
   require 'rubygems'
   $:.unshift File.expand_path('../../lib', __FILE__)
-  require 'milkshake/cli'
+  require 'milkshake'
 end
 
-Milkshake::CLI.new.call({}, ARGV.dup)
+Milkshake::CLI.start

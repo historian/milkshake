@@ -1,0 +1,19 @@
+PATH
+  remote: .
+  specs:
+    milkshake (2.0.0)
+      bundler
+      thor
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    thor (0.14.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler
+  milkshake!
+  thor

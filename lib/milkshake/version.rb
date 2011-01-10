@@ -1,3 +1,3 @@
-class Milkshake
-  VERSION = "1.0.0"
+module Milkshake
+  VERSION = "2.0.0"
 end
