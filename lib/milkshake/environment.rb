@@ -29,7 +29,7 @@ module Milkshake
     def load_gemspecs
       return if @gemspecs
       
-      groups = [:default, Rails.env.to_s.to_sym]
+      groups = [:default, RAILS_ENV.to_sym]
       @gemspecs = Bundler.definition.specs_for(groups)
     end
     
