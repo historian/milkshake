@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 begin
-  require 'milkshake'
+  require 'milkshake/app'
 rescue LoadError
   $:.unshift File.join(File.dirname(__FILE__), *%w[ .. lib ])
   retry

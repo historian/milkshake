@@ -1,34 +1,27 @@
-
-require 'fileutils'
-
 module Milkshake
   
   RAILS_VERSION = "2.3.4"
   
-  autoload :DependencyResolver, 'milkshake/dependency_resolver'
-  autoload :Environment,        'milkshake/environment'
-  autoload :Validator,          'milkshake/validator'
-  autoload :Template,           'milkshake/template'
-  autoload :Extender,           'milkshake/extender'
-  autoload :Linker,             'milkshake/linker'
-  autoload :Loader,             'milkshake/loader'
-  autoload :Cache,              'milkshake/cache'
-  autoload :App,                'milkshake/app'
+  require 'fileutils'
+  require 'digest/sha1'
+
+  require 'milkshake/version'
+  
+  require 'milkshake/environment'
+  require 'milkshake/validator'
+  require 'milkshake/extender'
+  require 'milkshake/linker'
+  require 'milkshake/loader'
+  require 'milkshake/cache'
   
   module RailsExtentions
-    autoload :Configuration, 'milkshake/rails_extentions/configuration'
-    autoload :Initializer,   'milkshake/rails_extentions/initializer'
-    autoload :Migrator,      'milkshake/rails_extentions/migrations'
-    autoload :GemBoot,       'milkshake/rails_extentions/boot'
-    autoload :VendorBoot,    'milkshake/rails_extentions/boot'
-  end
-  
-  module RubygemsExtentions
-    autoload :Specification, 'milkshake/rubygems_extentions/specification'
+    require 'milkshake/rails_extentions/configuration'
+    require 'milkshake/rails_extentions/initializer'
+    require 'milkshake/rails_extentions/migrations'
+    require 'milkshake/rails_extentions/boot'
   end
   
   class << self
-    attr_accessor :configuration_file
     attr_accessor :cache_file
     
     def load!
@@ -41,8 +34,7 @@ module Milkshake
     end
     
     def environment
-      self.configuration_file ||= File.join(RAILS_ROOT, 'config', 'milkshake.yml')
-      @environment ||= Environment.load(self.cache, self.configuration_file)
+      @environment ||= Environment.new(self.cache)
     end
     
     def validator

@@ -33,11 +33,6 @@ module Milkshake
           Milkshake::Template.evaluate('preinitializer.rb'
           ).write_to('config/preinitializer.rb')
           
-          unless File.file?('config/milkshake.yml')
-            Milkshake::Template.evaluate('milkshake.yml'
-            ).write_to('config/milkshake.yml')
-          end
-          
         end
         
         good_say('Milkshake successfully installed!')
@@ -131,10 +126,6 @@ module Milkshake
             shared_path + 'settings')
           
           swap_and_make_symlink!(
-            rails_path  + 'config/milkshake.yml',
-            shared_path + 'settings/milkshake.yml')
-          
-          swap_and_make_symlink!(
             rails_path  + 'config/database.yml',
             shared_path + 'settings/database.yml')
           
@@ -180,11 +171,6 @@ module Milkshake
           make_symlink!(
             rails_path  + 'config/settings',
             shared_path + 'settings')
-          
-          safe_rm(rails_path + 'config/milkshake.yml')
-          make_symlink!(
-            rails_path  + 'config/milkshake.yml',
-            shared_path + 'settings/milkshake.yml')
           
           safe_rm(rails_path + 'config/database.yml')
           make_symlink!(

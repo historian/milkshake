@@ -1,6 +1,3 @@
-
-require 'digest/sha1'
-
 module Milkshake
   class Validator
     

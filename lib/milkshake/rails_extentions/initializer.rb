@@ -34,9 +34,6 @@ module Milkshake
         begin
           Milkshake.cache.restore!
           Milkshake.environment.reload!
-          if Milkshake.linker.current_snapshot
-            Snapshots.load(Milkshake.linker.current_snapshot)
-          end
         rescue Exception
           nil
         end

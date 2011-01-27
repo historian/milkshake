@@ -4,7 +4,7 @@ module Milkshake
     module Configuration
       
       def self.included(base)
-        %w( default_gems default_i18n default_load_paths ).each do |meth|
+        %w( default_gems default_load_paths ).each do |meth|
           base.send :alias_method, "#{meth}_without_milkshake", meth
           base.send :alias_method, meth, "#{meth}_with_milkshake"
         end
@@ -15,14 +15,6 @@ module Milkshake
         default_gems = default_gems_without_milkshake
         default_gems.concat(Milkshake.environment.gem_dependencies)
         default_gems
-      end
-      
-      # inject locales from gem dependecies
-      def default_i18n_with_milkshake
-        default_i18n = default_i18n_without_milkshake
-        default_i18n.load_path.concat(Milkshake.environment.locale_paths)
-        default_i18n.load_path.uniq!
-        default_i18n
       end
       
       # inject fallback application controller
