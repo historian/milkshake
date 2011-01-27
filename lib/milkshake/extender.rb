@@ -1,7 +1,7 @@
 
 module Milkshake
   class Extender
-    
+
     def inject_milkshake!
       if defined?(::PhusionPassenger)
         extend_rails!
@@ -9,7 +9,7 @@ module Milkshake
         extend_boot!
       end
     end
-    
+
     # for passenger
     def extend_rails!
       Object.const_set('Rails', Module.new)
@@ -27,27 +27,27 @@ module Milkshake
         end
       end
     end
-    
+
     # for others
     def extend_boot!
       include_module Rails::VendorBoot, Milkshake::RailsExtentions::VendorBoot
       include_module Rails::GemBoot,    Milkshake::RailsExtentions::GemBoot
     end
-    
+
     def extend_railties!
       include_module Rails::Configuration, Milkshake::RailsExtentions::Configuration
       include_module Rails::Initializer,   Milkshake::RailsExtentions::Initializer
     end
-    
+
     def extend_frameworks!
       include_module ActiveRecord::Migrator, Milkshake::RailsExtentions::Migrator
     end
-    
+
   private
-    
+
     def include_module(base, mod)
       base.send :include, mod
     end
-    
+
   end
 end
